@@ -1,0 +1,135 @@
+@import '../../vendor/filament/filament/resources/css/app.css';
+
+.filament-tables-column-wrapper,
+.filament-forms-placeholder-component,
+.filament-forms-field-wrapper input,
+.filament-forms-field-wrapper select,
+.filament-forms-field-wrapper textarea,
+.filament-global-search-input input,
+.filament-tables-search-input input,
+.filament-forms-field-wrapper .prose,
+.choices__list {
+    @apply text-sm;
+}
+
+.filepond--root {
+    @apply font-sans;
+    @apply text-sm;
+}
+
+.filament-sidebar-nav {
+    display: flex;
+    flex-direction: column;
+}
+
+.filament-sidebar-nav > ul {
+    padding-block-end: theme('spacing.6');
+}
+
+button[disabled] {
+    opacity: 0.5;
+}
+
+.filepond--root[data-style-panel-aspect-ratio] .filepond--drop-label {
+    transform: translateY(-50%) !important;
+    position: absolute;
+    top: 50%;
+}
+
+.filament-main-topbar,
+.filament-sidebar-header {
+    @apply bg-white dark:bg-gray-800;
+}
+
+@screen lg {
+    .filament-sidebar {
+        @apply bg-transparent dark:!bg-transparent shadow-none lg:!border-r-0 rtl:lg:!border-l-0;
+    }
+
+    .filament-sidebar-header {
+        @apply border-r rtl:border-l;
+    }
+}
+
+.filament-sidebar-group > button {
+    @apply outline-offset-8 rounded-sm;
+}
+
+.filament-sidebar nav li:not(.filament-sidebar-group) div {
+    border-top: none;
+}
+
+.filament-sidebar-group button p {
+    @apply text-primary-600 dark:!text-primary-500;
+}
+
+.filament-forms-section-component {
+    @apply dark:!border-gray-700;
+}
+
+.filament-forms-section-header-wrapper {
+    @apply bg-gray-50 dark:!bg-gray-900/75;
+}
+
+.filament-forms-section-content-wrapper {
+    @apply border-t dark:border-gray-700;
+}
+
+.filament-versions-nav-component {
+    @apply border-t-0;
+}
+
+[type="text"],
+[type="email"],
+[type="url"],
+[type="password"],
+[type="number"],
+[type="date"],
+[type="datetime-local"],
+[type="month"],
+[type="search"],
+[type="tel"],
+[type="time"],
+[type="week"],
+[multiple],
+textarea,
+select,
+[type="checkbox"],
+[type="radio"],
+.filament-forms-repeater-component * {
+    @apply !shadow-none;
+}
+
+.filament-forms-section-content {
+    @apply p-4;
+}
+
+.filament-tables-icon-button-action {
+    @apply -mx-1;
+}
+
+.filament-dropdown-panel {
+    @apply overflow-hidden;
+}
+
+.filament-dropdown-list-item-label {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.filament-global-search-result a p > span {
+    @apply block;
+    @apply !ml-0;
+}
+
+.filament-sidebar-header:before {
+    @apply !hidden;
+}
+
+.filament-main-footer {
+    @apply px-2;
+    @apply sm:px-4;
+    @apply md:px-6;
+    @apply lg:px-8;
+}
