@@ -172,18 +172,20 @@ class ThemeRepository implements ThemeRepositoryContract
                 $this->bootTheme($parentTheme);
             }
 
-            $this->loadFiles($theme->getFiles());
+            $this->loadFiles($theme, $theme->getFiles());
             $this->bootProviders($theme->getProviders());
 
             return true;
         }, false);
     }
 
-    protected function loadFiles(array $files): void
+    protected function loadFiles(Theme $theme, array $files): void
     {
         foreach ($files as $file) {
-            if (File::exists($file)) {
-                require_once $file;
+            $path = $theme->getPath($file);
+
+            if (File::exists($path)) {
+                require_once $path;
             }
         }
     }

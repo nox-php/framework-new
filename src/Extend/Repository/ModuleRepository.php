@@ -152,7 +152,7 @@ class ModuleRepository implements ModuleRepositoryContract
     protected function bootModule(Module $module): bool
     {
         return rescue(function () use ($module) {
-            $this->loadFiles($module->getFiles());
+            $this->loadFiles($module, $module->getFiles());
             $this->bootProviders($module->getProviders());
 
             return true;
@@ -172,11 +172,13 @@ class ModuleRepository implements ModuleRepositoryContract
         return ModuleStatus::PublishSuccess;
     }
 
-    protected function loadFiles(array $files): void
+    protected function loadFiles(Module $module, array $files): void
     {
         foreach ($files as $file) {
-            if (File::exists($file)) {
-                require_once $file;
+            $path = $module->getPath($file);
+
+            if (File::exists($path)) {
+                require_once $path;
             }
         }
     }

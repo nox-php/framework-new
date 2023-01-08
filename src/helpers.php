@@ -1,7 +1,6 @@
 <?php
 
 use Nox\Framework\Support\FormBuilder;
-use Nox\Framework\Transformer\Transformer;
 
 if (! function_exists('settings')) {
     function settings(?string $key = null, $default = null)
@@ -21,7 +20,7 @@ if (! function_exists('transformer')) {
             return transformer()->transform($key, $value, $parameters);
         }
 
-        return app(Transformer::class);
+        return app('transformer');
     }
 }
 
