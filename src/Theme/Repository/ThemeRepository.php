@@ -8,6 +8,8 @@ use Nox\Framework\Theme\Contracts\ThemeRepository as ThemeRepositoryContract;
 use Nox\Framework\Theme\Discovery\ThemeDiscovery;
 use Nox\Framework\Theme\Enums\ThemeStatus;
 use Nox\Framework\Theme\Exceptions\ThemeNotFoundException;
+use Nox\Framework\Theme\Jobs\DeleteThemeJob;
+use Nox\Framework\Theme\Jobs\InstallThemeJob;
 use Nox\Framework\Theme\Theme;
 
 class ThemeRepository implements ThemeRepositoryContract
@@ -175,7 +177,7 @@ class ThemeRepository implements ThemeRepositoryContract
             return ThemeStatus::AlreadyInstalled;
         }
 
-        // TODO: dispatch job
+        InstallThemeJob::dispatch($name, auth()->user());
 
         return ThemeStatus::InstallPending;
     }
@@ -186,7 +188,7 @@ class ThemeRepository implements ThemeRepositoryContract
             return ThemeStatus::NotFound;
         }
 
-        // TODO: dispatch job
+        DeleteThemeJob::dispatch($theme->name(), auth()->user());
 
         return ThemeStatus::DeletePending;
     }
