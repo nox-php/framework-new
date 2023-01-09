@@ -18,4 +18,8 @@ interface ModuleRepository
     public function delete(string|Module $module): ModuleStatus;
 
     public function publish(string|Module $module, bool $migrate = true): ModuleStatus;
+
+    public function clear(): void;
+
+    public function clearCache(): void;
 }

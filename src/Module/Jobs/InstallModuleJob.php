@@ -14,6 +14,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Artisan;
 use Nox\Framework\Admin\Filament\Resources\ActivityResource;
 use Nox\Framework\Auth\Models\User;
+use Nox\Framework\Module\Contracts\ModuleRepository;
 use Nox\Framework\Support\Composer;
 use Spatie\Activitylog\Models\Activity;
 
@@ -27,10 +28,10 @@ class InstallModuleJob implements ShouldQueue, ShouldBeUnique
     ) {
     }
 
-    public function handle(Composer $composer): void
+    public function handle(ModuleRepository $modules, Composer $composer): void
     {
         rescue(
-            fn () => $this->install($composer),
+            fn () => $this->install($modules, $composer),
             fn (Exception $e) => $this->handleError(activity()
                 ->by($this->user)
                 ->event('nox.module.delete')
@@ -38,7 +39,7 @@ class InstallModuleJob implements ShouldQueue, ShouldBeUnique
         );
     }
 
-    private function install(Composer $composer): void
+    private function install(ModuleRepository $modules, Composer $composer): void
     {
         $status = $composer->require($this->name);
 
@@ -53,6 +54,8 @@ class InstallModuleJob implements ShouldQueue, ShouldBeUnique
 
             return;
         }
+
+        $modules->clear();
 
         Artisan::call('package:discover');
 

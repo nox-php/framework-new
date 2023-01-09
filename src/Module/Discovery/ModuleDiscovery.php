@@ -18,7 +18,7 @@ class ModuleDiscovery
     protected function getNoxModules(array $packages): array
     {
         return collect($packages)
-            ->mapWithKeys(fn (string $package): array => [
+            ->mapWithKeys(fn(string $package): array => [
                 $package => $this->getPackageManifest($package),
             ])
             ->filter()
@@ -27,14 +27,14 @@ class ModuleDiscovery
 
     protected function getPackageManifest(string $package): ?array
     {
-        $path = $package.'/composer.json';
+        $path = $package . '/composer.json';
 
-        if (! File::exists($path)) {
+        if (!File::exists($path)) {
             return null;
         }
 
         $manifest = $this->loadManifest($path);
-        if ($manifest === null || ! $this->isNoxModule($manifest)) {
+        if ($manifest === null || !$this->isNoxModule($manifest)) {
             return null;
         }
 
@@ -61,10 +61,11 @@ class ModuleDiscovery
 
     protected function isNoxModule(array $manifest): bool
     {
-        if (! isset($manifest['keywords'])) {
+        if (!isset($manifest['keywords'])) {
             return false;
         }
 
-        return in_array('nox-module', $manifest['keywords']);
+        return in_array('nox-module', $manifest['keywords']) ||
+            in_array('filament', $manifest['keywords']);
     }
 }

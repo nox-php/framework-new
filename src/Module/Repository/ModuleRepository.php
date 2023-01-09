@@ -184,14 +184,14 @@ class ModuleRepository implements ModuleRepositoryContract
         return ModuleStatus::DeletePending;
     }
 
-    protected function clear(): void
+    public function clear(): void
     {
         $this->clearCache();
 
         $this->modules = null;
     }
 
-    protected function clearCache(): void
+    public function clearCache(): void
     {
         if (! $this->isCacheEnabled()) {
             return;
