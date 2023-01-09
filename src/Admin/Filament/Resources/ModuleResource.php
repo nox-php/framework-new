@@ -20,16 +20,6 @@ class ModuleResource extends Resource
 
     protected static ?int $navigationSort = 1;
 
-    protected static function getNavigationLabel(): string
-    {
-        return __('nox::admin.resources.module.navigation_label');
-    }
-
-    protected static function getNavigationGroup(): ?string
-    {
-        return __('nox::admin.groups.extend');
-    }
-
     public static function getModelLabel(): string
     {
         return __('nox::admin.resources.module.label');
@@ -43,7 +33,7 @@ class ModuleResource extends Resource
                     ->label(__('nox::admin.resources.module.form.inputs.name')),
                 Forms\Components\TextInput::make('version')
                     ->label(__('nox::admin.resources.module.form.inputs.version'))
-                    ->formatStateUsing(static fn (string $state): string => 'v'.$state),
+                    ->formatStateUsing(static fn(string $state): string => 'v' . $state),
                 Forms\Components\TextInput::make('path')
                     ->label(__('nox::admin.resources.module.form.inputs.path'))
                     ->columnSpanFull(),
@@ -89,6 +79,17 @@ class ModuleResource extends Resource
         return [
             'index' => Pages\ListModules::route('/'),
             'view' => Pages\ViewModule::route('/{record}'),
+            'browse' => Pages\BrowseModules::route('/browse')
         ];
+    }
+
+    protected static function getNavigationLabel(): string
+    {
+        return __('nox::admin.resources.module.navigation_label');
+    }
+
+    protected static function getNavigationGroup(): ?string
+    {
+        return __('nox::admin.groups.extend');
     }
 }

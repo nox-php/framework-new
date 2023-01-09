@@ -1,0 +1,3 @@
+<x-filament::page>
+    Browsing...
+</x-filament::page>

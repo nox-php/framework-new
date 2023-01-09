@@ -22,7 +22,7 @@ class Module extends Model
             'name' => 'string',
             'description' => 'string',
             'version' => 'string',
-            'enabled' => 'boolean',
+            'pretty_version' => 'string'
         ];
     }
 
@@ -40,9 +40,9 @@ class Module extends Model
                 'id' => Str::replace('/', '-', $module->getName()),
                 'name' => $module->getName(),
                 'description' => $module->getDescription(),
-                'version' => $module->getVersion(),
-                'path' => $module->getPath(),
-                'enabled' => $module->isEnabled(),
+                'version' => $module->version(),
+                'pretty_version' => $module->prettyVersion(),
+                'path' => $module->path()
             ])
             ->values()
             ->all();

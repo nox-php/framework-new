@@ -18,7 +18,7 @@ class ModuleDiscovery
     protected function getNoxModules(array $packages): array
     {
         return collect($packages)
-            ->mapWithKeys(static fn(string $package): array => [
+            ->mapWithKeys(fn(string $package): array => [
                 $package => $this->getPackageManifest($package)
             ])
             ->filter()
@@ -34,17 +34,19 @@ class ModuleDiscovery
         }
 
         $manifest = $this->loadManifest($path);
-        if($manifest === null || !$this->isNoxModule($manifest)) {
+        if ($manifest === null || !$this->isNoxModule($manifest)) {
             return null;
         }
 
         return collect($manifest)
             ->only([
                 'name',
-                'version',
+                'description',
                 'config'
             ])
             ->put('path', $package)
+            ->put('version', InstalledVersions::getVersion($package))
+            ->put('pretty_version', InstalledVersions::getPrettyVersion($package))
             ->all();
     }
 

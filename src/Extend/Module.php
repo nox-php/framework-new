@@ -9,7 +9,9 @@ class Module implements Arrayable
 {
     public function __construct(
         protected string $name,
+        protected ?string $description,
         protected string $version,
+        protected string $prettyVersion,
         protected string $path,
         protected array $config
     )
@@ -21,9 +23,19 @@ class Module implements Arrayable
         return $this->name;
     }
 
+    public function description(): ?string
+    {
+        return $this->description;
+    }
+
     public function version(): string
     {
         return $this->version;
+    }
+
+    public function prettyVersion(): string
+    {
+        return $this->prettyVersion;
     }
 
     public function path(?string $path = null): string
@@ -48,7 +60,9 @@ class Module implements Arrayable
     {
         return new static(
             $module['name'],
+            $module['description'] ?? null,
             $module['version'],
+            $module['pretty_version'],
             $module['path'],
             $module['config']
         );
@@ -58,7 +72,9 @@ class Module implements Arrayable
     {
         return [
             'name' => $this->name,
+            'description' => $this->description,
             'version' => $this->version,
+            'pretty_version' => $this->prettyVersion,
             'path' => $this->path,
             'config' => $this->config
         ];
