@@ -121,7 +121,7 @@ class InstallThemeJob implements ShouldQueue, ShouldBeUnique
 
             File::put(
                 $path,
-                json_encode($data, JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT),
+                json_encode($data, JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES),
                 true
             );
         });
