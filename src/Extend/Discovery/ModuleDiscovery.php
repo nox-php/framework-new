@@ -65,6 +65,6 @@ class ModuleDiscovery
             return false;
         }
 
-        return in_array('nox-package', $manifest['keywords']);
+        return in_array('nox-module', $manifest['keywords']);
     }
 }

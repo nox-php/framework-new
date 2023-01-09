@@ -70,7 +70,7 @@ class AdminServiceProvider extends PluginServiceProvider
                         'nox::filament.versions',
                         [
                             'versions' => [
-                                'nox' => InstalledVersions::getPrettyVersion('nox-php/framework'),
+                                'nox' => InstalledVersions::getPrettyVersion('nox-php/framework-new'),
                                 'php' => PHP_VERSION,
                             ],
                         ]
