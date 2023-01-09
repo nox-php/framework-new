@@ -311,12 +311,22 @@ return [
                     'title' => ':name',
                     'body' => 'Successfully enabled theme',
                 ],
+
+                'failed' => [
+                    'title' => ':name',
+                    'body' => 'Failed to enable theme',
+                ],
             ],
 
             'disable' => [
                 'success' => [
                     'title' => ':name',
                     'body' => 'Successfully disabled theme',
+                ],
+
+                'failed' => [
+                    'title' => ':name',
+                    'body' => 'Failed to disable theme',
                 ],
             ],
 

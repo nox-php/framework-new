@@ -15,6 +15,50 @@ class ListThemes extends ListRecords
 {
     protected static string $resource = ThemeResource::class;
 
+    public function enableTheme(
+        ThemeRepository $themes,
+        Theme $record
+    ) {
+        if (
+            ($status = $themes->enable($record->name)) &&
+            $status === ThemeStatus::EnableSuccess
+        ) {
+            Notification::make()
+                ->success()
+                ->title(__('nox::admin.notifications.themes.enable.success.title', ['name' => $record->name]))
+                ->body(__($status->value))
+                ->send();
+        } else {
+            Notification::make()
+                ->danger()
+                ->title(__('nox::admin.notifications.themes.enable.failed.title', ['name' => $record->name]))
+                ->body(__($status->value))
+                ->send();
+        }
+    }
+
+    public function disableTheme(
+        ThemeRepository $themes,
+        Theme $record
+    ) {
+        if (
+            ($status = $themes->disable()) &&
+            $status === ThemeStatus::DisableSuccess
+        ) {
+            Notification::make()
+                ->success()
+                ->title(__('nox::admin.notifications.themes.disable.success.title', ['name' => $record->name]))
+                ->body(__($status->value))
+                ->send();
+        } else {
+            Notification::make()
+                ->danger()
+                ->title(__('nox::admin.notifications.themes.disable.failed.title', ['name' => $record->name]))
+                ->body(__($status->value))
+                ->send();
+        }
+    }
+
     public function deleteTheme(
         ThemeRepository $themes,
         Theme $record

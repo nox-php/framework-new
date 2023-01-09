@@ -33,7 +33,7 @@ class ThemeResource extends Resource
                     ->label(__('nox::admin.resources.theme.form.inputs.name')),
                 Forms\Components\TextInput::make('version')
                     ->label(__('nox::admin.resources.theme.form.inputs.version'))
-                    ->formatStateUsing(static fn (string $state): string => 'v'.$state),
+                    ->formatStateUsing(static fn(string $state): string => 'v' . $state),
                 Forms\Components\TextInput::make('path')
                     ->label(__('nox::admin.resources.theme.form.inputs.path'))
                     ->columnSpanFull(),
@@ -62,8 +62,18 @@ class ThemeResource extends Resource
                     ->searchable(),
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
+                Tables\Actions\Action::make()
+                    ->label(__('nox::admin.resources.theme.table.actions.enable'))
+                    ->requiresConfirmation()
+                    ->action('enableTheme')
+                    ->hidden(static fn(Theme $theme): bool => $theme->enabled),
+                Tables\Actions\Action::make()
+                    ->label(__('nox::admin.resources.theme.table.actions.disable'))
+                    ->requiresConfirmation()
+                    ->action('disableTheme')
+                    ->hidden(static fn(Theme $theme): bool => !$theme->enabled),
                 Tables\Actions\ActionGroup::make([
+                    Tables\Actions\ViewAction::make(),
                     Tables\Actions\DeleteAction::make()
                         ->action('deleteTheme'),
                 ]),

@@ -11,13 +11,9 @@ class SwitchLocale
     {
         $locale = session('locale', $request->get('locale', config('app.locale', 'en')));
 
-        info('checking locale');
-
         if (! ($matchedLocale = config('localisation.'.$locale)) || ! $matchedLocale['enabled']) {
             return $next($request);
         }
-
-        info('switching to locale: '.$locale);
 
         app()->setLocale($locale);
 
