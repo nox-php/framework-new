@@ -24,6 +24,7 @@ class Theme extends Model
             'description' => 'string',
             'version' => 'string',
             'pretty_version' => 'string',
+            'enabled' => 'boolean'
         ];
     }
 

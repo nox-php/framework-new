@@ -64,14 +64,17 @@ class ThemeResource extends Resource
             ->actions([
                 Tables\Actions\Action::make('enable-theme')
                     ->label(__('nox::admin.resources.theme.table.actions.enable'))
+                    ->icon('heroicon-o-check')
                     ->requiresConfirmation()
                     ->action('enableTheme')
-                    ->hidden(static fn(Theme $theme): bool => $theme->enabled),
+                    ->hidden(static fn(Theme $record): bool => $record->enabled),
                 Tables\Actions\Action::make('disable-theme')
                     ->label(__('nox::admin.resources.theme.table.actions.disable'))
+                    ->icon('heroicon-o-x')
+                    ->color('danger')
                     ->requiresConfirmation()
                     ->action('disableTheme')
-                    ->hidden(static fn(Theme $theme): bool => !$theme->enabled),
+                    ->hidden(static fn(Theme $record): bool => !$record->enabled),
                 Tables\Actions\ActionGroup::make([
                     Tables\Actions\ViewAction::make(),
                     Tables\Actions\DeleteAction::make()

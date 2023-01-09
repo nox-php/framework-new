@@ -80,6 +80,8 @@ return [
                 ],
 
                 'actions' => [
+                    'enable' => 'Enable',
+                    'disable' => 'Disable',
                     'install' => 'Install',
                     'view' => 'View'
                 ]
