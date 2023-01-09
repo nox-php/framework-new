@@ -1,3 +1,3 @@
 <x-filament::page>
-    Browsing...
+    {{ $this->table }}
 </x-filament::page>

@@ -3,6 +3,9 @@
 namespace Nox\Framework\Admin\Filament\Resources\ModuleResource\Pages;
 
 use Filament\Resources\Pages\Page;
+use Filament\Tables\Columns\BadgeColumn;
+use Filament\Tables\Columns\Layout\Split;
+use Filament\Tables\Columns\Layout\Stack;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
@@ -38,10 +41,10 @@ class BrowseModules extends Page implements HasTable
         $query = [
             'page' => $this->page,
             'per_page' => $this->tableRecordsPerPage,
-            'tags' => 'psr-4',
+            //            'tags' => 'nox-module',
         ];
 
-        if (! empty($this->tableSearchQuery)) {
+        if (!empty($this->tableSearchQuery)) {
             $query['q'] = $this->tableSearchQuery;
         }
 
@@ -52,7 +55,8 @@ class BrowseModules extends Page implements HasTable
                     ->json();
 
                 $response['results'] = collect($response['results'])
-                    ->map(static fn (array $module): PackagistModule => new PackagistModule([
+                    ->filter(static fn(array $module): bool => isset($module['downloads']))
+                    ->map(static fn(array $module): PackagistModule => (new PackagistModule())->forceFill([
                         'name' => $module['name'],
                         'description' => $module['description'],
                         'url' => $module['url'],
@@ -62,16 +66,32 @@ class BrowseModules extends Page implements HasTable
 
                 return $response;
             },
-            static fn () => []
+            static fn() => [
+                'results' => [],
+                'total' => 0
+            ]
         );
     }
 
     protected function getTableColumns(): array
     {
         return [
-            TextColumn::make('name')
-                ->label('Name')
-                ->searchable(),
+            Split::make([
+                Stack::make([
+                    BadgeColumn::make('name')
+                        ->label('Name')
+                        ->searchable()
+                        ->wrap(),
+                    TextColumn::make('description')
+                        ->label('Description')
+                        ->wrap()
+                ]),
+                BadgeColumn::make('downloads')
+                    ->label('Downloads')
+                    ->color('success')
+                    ->icon('heroicon-o-download')
+                    ->formatStateUsing(static fn(int $state): string => number_format($state))
+            ])
         ];
     }
 }
