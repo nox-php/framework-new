@@ -15,6 +15,7 @@ use Nox\Framework\Admin\Filament\Pages\Health as HealthPage;
 use Nox\Framework\Admin\Filament\Pages\Settings;
 use Nox\Framework\Admin\Filament\Resources\ActivityResource;
 use Nox\Framework\Admin\Filament\Resources\ModuleResource;
+use Nox\Framework\Admin\Filament\Resources\ThemeResource;
 use Nox\Framework\Admin\Filament\Resources\UserResource;
 use Nox\Framework\Admin\Http\Livewire\LocaleSwitcher;
 use Nox\Framework\Nox;
@@ -35,6 +36,7 @@ class AdminServiceProvider extends PluginServiceProvider
         ActivityResource::class,
         UserResource::class,
         ModuleResource::class,
+        ThemeResource::class
     ];
 
     protected array $pages = [

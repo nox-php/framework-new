@@ -47,6 +47,45 @@ return [
             ],
         ],
 
+        'theme' => [
+            'navigation_label' => 'Themes',
+            'label' => 'Theme',
+
+            'actions' => [
+                'browse' => 'Browse themes',
+                'go_back' => 'Go back'
+            ],
+
+            'form' => [
+                'inputs' => [
+                    'name' => 'Name',
+                    'version' => 'Version',
+                    'path' => 'Path',
+                    'description' => 'Description',
+                ],
+            ],
+
+            'table' => [
+                'columns' => [
+                    'name' => 'Name',
+                    'description' => 'Description',
+                    'version' => 'Version',
+                ],
+
+                'filters' => [
+                    'load_manifests' => [
+                        'label' => 'Load Manifests (can slow down the table)',
+                        'indicator' => 'Manifests'
+                    ]
+                ],
+
+                'actions' => [
+                    'install' => 'Install',
+                    'view' => 'View'
+                ]
+            ],
+        ],
+
         'activity' => [
             'navigation_label' => 'Activities',
             'label' => 'Activity',
@@ -260,6 +299,78 @@ return [
                 'failed' => [
                     'title' => ':name',
                     'body' => 'Failed to publish module',
+                ],
+            ],
+        ],
+
+        'themes' => [
+            'not_found' => 'Theme could not be found',
+
+            'enable' => [
+                'success' => [
+                    'title' => ':name',
+                    'body' => 'Successfully enabled theme',
+                ],
+            ],
+
+            'disable' => [
+                'success' => [
+                    'title' => ':name',
+                    'body' => 'Successfully disabled theme',
+                ],
+            ],
+
+            'install' => [
+                'pending' => [
+                    'title' => 'Pending installation: :name',
+                    'body' => 'You will be notified once it has been installed',
+                ],
+
+                'success' => [
+                    'title' => ':name',
+                    'body' => 'Successfully installed theme',
+                ],
+
+                'failed' => [
+                    'title' => ':name',
+                    'body' => 'Failed to install theme',
+                ],
+
+                'actions' => [
+                    'view_log' => 'View log',
+                ],
+            ],
+
+            'delete' => [
+                'pending' => [
+                    'title' => 'Pending deletion: :name',
+                    'body' => 'You will be notified once it has been deleted',
+                ],
+
+                'success' => [
+                    'title' => ':name',
+                    'body' => 'Successfully deleted theme',
+                ],
+
+                'failed' => [
+                    'title' => ':name',
+                    'body' => 'Failed to delete theme',
+                ],
+
+                'actions' => [
+                    'view_log' => 'View log',
+                ],
+            ],
+
+            'publish' => [
+                'success' => [
+                    'title' => ':name',
+                    'body' => 'Successfully published theme',
+                ],
+
+                'failed' => [
+                    'title' => ':name',
+                    'body' => 'Failed to publish theme',
                 ],
             ],
         ],

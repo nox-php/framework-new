@@ -26,13 +26,6 @@ class Module extends Model
         ];
     }
 
-    public function getCasts(): array
-    {
-        return [
-            'enabled' => 'boolean',
-        ];
-    }
-
     public function getRows(): array
     {
         return collect(Modules::all())
