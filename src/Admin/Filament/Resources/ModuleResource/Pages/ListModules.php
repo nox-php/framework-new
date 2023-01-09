@@ -69,7 +69,7 @@ class ListModules extends ListRecords
     {
         return [
             Action::make('browse-modules')
-                ->label('Browse modules')
+                ->label(__('nox::admin.resources.module.actions.browse'))
                 ->url(ModuleResource::getUrl('browse')),
         ];
     }

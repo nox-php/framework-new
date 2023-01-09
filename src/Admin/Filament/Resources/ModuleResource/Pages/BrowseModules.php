@@ -119,7 +119,7 @@ class BrowseModules extends Page implements Tables\Contracts\HasTable
     {
         return [
             Pages\Actions\Action::make('go-back')
-                ->label('Go back')
+                ->label(__('nox::admin.resources.module.actions.go_back'))
                 ->url(ModuleResource::getUrl()),
         ];
     }
@@ -128,8 +128,8 @@ class BrowseModules extends Page implements Tables\Contracts\HasTable
     {
         return [
             Tables\Filters\Filter::make('load_manifests')
-                ->label('Load Manifests (can slow down the table)')
-                ->indicator('Manifests')
+                ->label(__('nox::admin.resources.module.table.filters.load_manifests.label'))
+                ->label(__('nox::admin.resources.module.table.filters.load_manifests.indicator'))
                 ->default(),
         ];
     }
@@ -140,21 +140,17 @@ class BrowseModules extends Page implements Tables\Contracts\HasTable
             Tables\Columns\Layout\Split::make([
                 Tables\Columns\Layout\Stack::make([
                     Tables\Columns\BadgeColumn::make('name')
-                        ->label('Name')
                         ->searchable()
                         ->wrap(),
                     Tables\Columns\TextColumn::make('description')
-                        ->label('Description')
                         ->wrap(),
                 ])->space(),
                 Tables\Columns\Layout\Stack::make([
                     Tables\Columns\BadgeColumn::make('downloads')
-                        ->label('Downloads')
                         ->color('success')
                         ->icon('heroicon-o-download')
                         ->formatStateUsing(static fn (int $state): string => number_format($state)),
                     Tables\Columns\TagsColumn::make('manifest.keywords')
-                        ->label('Tags')
                         ->getStateUsing(static fn (PackagistModule $record): array => $record->manifest === null
                             ? []
                             : collect($record->manifest['keywords'])
@@ -172,10 +168,8 @@ class BrowseModules extends Page implements Tables\Contracts\HasTable
             Tables\Columns\Layout\Panel::make([
                 Tables\Columns\Layout\Stack::make([
                     Tables\Columns\Layout\Split::make([
-                        Tables\Columns\BadgeColumn::make('manifest.version')
-                            ->label('Version'),
-                        Tables\Columns\TagsColumn::make('manifest.license')
-                            ->label('Licenses'),
+                        Tables\Columns\BadgeColumn::make('manifest.version'),
+                        Tables\Columns\TagsColumn::make('manifest.license'),
                         Tables\Columns\TextColumn::make('manifest.time')
                             ->formatStateUsing(static fn (?string $state): string => 'Last updated '.Carbon::parse($state)->diffForHumans()),
                     ]),
@@ -190,13 +184,13 @@ class BrowseModules extends Page implements Tables\Contracts\HasTable
     {
         return [
             Tables\Actions\Action::make('install-module')
-                ->label('Install')
+                ->label(__('nox::admin.resources.module.table.actions.install'))
                 ->button()
                 ->icon('heroicon-o-download')
                 ->action('installModule'),
             Tables\Actions\ActionGroup::make([
                 Tables\Actions\Action::make('view-module')
-                    ->label('View')
+                    ->label(__('nox::admin.resources.module.table.actions.view'))
                     ->icon('heroicon-o-external-link')
                     ->url(static fn (PackagistModule $record): string => $record->url)
                     ->openUrlInNewTab(),

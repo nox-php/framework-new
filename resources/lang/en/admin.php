@@ -14,6 +14,7 @@ return [
 
             'actions' => [
                 'browse' => 'Browse modules',
+                'go_back' => 'Go back'
             ],
 
             'form' => [
@@ -31,6 +32,18 @@ return [
                     'description' => 'Description',
                     'version' => 'Version',
                 ],
+
+                'filters' => [
+                    'load_manifests' => [
+                        'label' => 'Load Manifests (can slow down the table)',
+                        'indicator' => 'Manifests'
+                    ]
+                ],
+
+                'actions' => [
+                    'install' => 'Install',
+                    'view' => 'View'
+                ]
             ],
         ],
 
