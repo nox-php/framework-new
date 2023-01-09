@@ -3,6 +3,7 @@
 namespace Nox\Framework\Support;
 
 use Illuminate\Http\Client\Pool;
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 
 class Packagist
@@ -15,7 +16,7 @@ class Packagist
 
     public static function search(
         string $query,
-        string $tag,
+        array $tags,
         int $page,
         int $perPage
     ): array
@@ -23,7 +24,7 @@ class Packagist
         return Http::asJson()
             ->get(static::$baseUrl . '/search.json', [
                 'q' => $query,
-                'tag' => $tag,
+                'tags' => $tags,
                 'page' => $page,
                 'per_page' => $perPage
             ])
@@ -37,17 +38,20 @@ class Packagist
         collect($packages)
             ->chunk(static::$poolChunkSize)
             ->each(static function ($chunk) use (&$responses) {
-                $responses[] = static::poolPackages($chunk);
+                $responses[] = static::poolPackages($chunk->all());
             });
 
-        return array_merge(...$responses);
+        return collect(array_merge(...$responses))
+            ->map(static fn(Response $response, $key) => $response->json('packages.' . $key . '.0'))
+            ->filter()
+            ->all();
     }
 
     private static function poolPackages(array $packages): array
     {
         return Http::pool(static function (Pool $pool) use ($packages) {
             foreach ($packages as $package) {
-                $pool->as($package)->get(static::$baseRepositoryUrl . '/' . $package . '.json');
+                $pool->as($package)->asJson()->get(static::$baseRepositoryUrl . '/' . $package . '.json');
             }
         });
     }

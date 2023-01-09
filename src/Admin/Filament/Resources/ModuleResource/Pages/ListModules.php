@@ -3,6 +3,7 @@
 namespace Nox\Framework\Admin\Filament\Resources\ModuleResource\Pages;
 
 use Filament\Notifications\Notification;
+use Filament\Pages\Actions\Action;
 use Filament\Resources\Pages\ListRecords;
 use Illuminate\Support\Collection;
 use Nox\Framework\Admin\Filament\Resources\ModuleResource;
@@ -17,7 +18,8 @@ class ListModules extends ListRecords
     public function deleteModule(
         ModuleRepository $modules,
         Module $record
-    ) {
+    )
+    {
         if (
             ($status = $modules->delete($record->name)) &&
             $status === ModuleStatus::DeletePending
@@ -41,7 +43,8 @@ class ListModules extends ListRecords
     public function bulkDeleteModules(
         ModuleRepository $modules,
         Collection $records
-    ) {
+    )
+    {
         foreach ($records as $record) {
             if (
                 ($status = $modules->delete($record->name)) &&
@@ -62,5 +65,14 @@ class ListModules extends ListRecords
         }
 
         return redirect(ModuleResource::getUrl());
+    }
+
+    protected function getActions(): array
+    {
+        return [
+            Action::make('browse-modules')
+                ->label('Browse modules')
+                ->url(ModuleResource::getUrl('browse'), true)
+        ];
     }
 }
