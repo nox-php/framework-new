@@ -1,6 +1,6 @@
 <?php
 
-namespace Nox\Framework\Admin\Filament\Resources\ModuleResource\Pages;
+namespace Nox\Framework\Admin\Filament\Resources\ThemeResource\Pages;
 
 use Carbon\Carbon;
 use Filament\Notifications\Notification;
@@ -12,59 +12,59 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Cache;
-use Nox\Framework\Admin\Filament\Resources\ModuleResource;
+use Nox\Framework\Admin\Filament\Resources\ThemeResource;
 use Nox\Framework\Admin\Models\PackagistPackage;
-use Nox\Framework\Module\Contracts\ModuleRepository;
-use Nox\Framework\Module\Enums\ModuleStatus;
 use Nox\Framework\Support\Packagist;
+use Nox\Framework\Theme\Contracts\ThemeRepository;
+use Nox\Framework\Theme\Enums\ThemeStatus;
 
-class BrowseModules extends ListRecords
+class BrowseThemes extends ListRecords
 {
-    protected static string $resource = ModuleResource::class;
+    protected static string $resource = ThemeResource::class;
 
     private static array $tagsBlacklist = [
-        'nox-module',
+        'nox-theme',
         'php',
     ];
 
-    public function installModule(
-        ModuleRepository $modules,
+    public function installTheme(
+        ThemeRepository $themes,
         PackagistPackage $record
     )
     {
         if (
-            ($status = $modules->install($record->name)) &&
-            $status === ModuleStatus::InstallPending
+            ($status = $themes->install($record->name)) &&
+            $status === ThemeStatus::InstallPending
         ) {
             Notification::make()
                 ->success()
-                ->title(__('nox::admin.notifications.modules.install.success.title', ['name' => $record->name]))
+                ->title(__('nox::admin.notifications.themes.install.success.title', ['name' => $record->name]))
                 ->body(__($status->value))
                 ->send();
         }
 
         Notification::make()
             ->danger()
-            ->title(__('nox::admin.notifications.modules.install.failed.title', ['name' => $record->name]))
+            ->title(__('nox::admin.notifications.themes.install.failed.title', ['name' => $record->name]))
             ->body(__($status->value))
             ->send();
     }
 
     public function getTableRecords(): Collection|Paginator
     {
-        $modules = $this->getPackagistModules();
+        $themes = $this->getPackagistThemes();
 
         return new LengthAwarePaginator(
-            $modules['results'],
-            $modules['total'],
+            $themes['results'],
+            $themes['total'],
             $this->tableRecordsPerPage,
             $this->page
         );
     }
 
-    private function getPackagistModules(): array
+    private function getPackagistThemes(): array
     {
-        $response = $this->loadPackageModules();
+        $response = $this->loadPackageThemes();
 
         if (
             $response['total'] === 0 ||
@@ -74,7 +74,7 @@ class BrowseModules extends ListRecords
         }
 
         $names = collect($response['results'])
-            ->filter(static fn(PackagistPackage $module): bool => $module['manifest'] === null)
+            ->filter(static fn(PackagistPackage $theme): bool => $theme['manifest'] === null)
             ->keys()
             ->all();
 
@@ -91,26 +91,26 @@ class BrowseModules extends ListRecords
         return $response;
     }
 
-    private function loadPackageModules()
+    private function loadPackageThemes()
     {
         return rescue(
             function () {
                 $response = Packagist::search(
                     $this->tableSearchQuery,
-                    ['nox-module', 'filament'],
+                    ['nox-theme'],
                     $this->page,
                     $this->tableRecordsPerPage
                 );
 
                 $response['results'] = collect($response['results'])
-                    ->filter(static fn(array $module): bool => isset($module['downloads']))
-                    ->mapWithKeys(static fn(array $module): array => [
-                        $module['name'] => (new PackagistPackage())->forceFill([
-                            'name' => $module['name'],
-                            'description' => $module['description'],
-                            'url' => $module['url'],
-                            'downloads' => $module['downloads'],
-                            'manifest' => Cache::get('packagist.manifest.' . $module['name']),
+                    ->filter(static fn(array $theme): bool => isset($theme['downloads']))
+                    ->mapWithKeys(static fn(array $theme): array => [
+                        $theme['name'] => (new PackagistPackage())->forceFill([
+                            'name' => $theme['name'],
+                            'description' => $theme['description'],
+                            'url' => $theme['url'],
+                            'downloads' => $theme['downloads'],
+                            'manifest' => Cache::get('packagist.manifest.' . $theme['name']),
                         ]),
                     ])
                     ->all();
@@ -133,8 +133,8 @@ class BrowseModules extends ListRecords
     {
         return [
             Pages\Actions\Action::make('go-back')
-                ->label(__('nox::admin.resources.module.actions.go_back'))
-                ->url(ModuleResource::getUrl()),
+                ->label(__('nox::admin.resources.theme.actions.go_back'))
+                ->url(ThemeResource::getUrl()),
         ];
     }
 
@@ -142,8 +142,8 @@ class BrowseModules extends ListRecords
     {
         return [
             Tables\Filters\Filter::make('load_manifests')
-                ->label(__('nox::admin.resources.module.table.filters.load_manifests.label'))
-                ->indicator(__('nox::admin.resources.module.table.filters.load_manifests.indicator'))
+                ->label(__('nox::admin.resources.theme.table.filters.load_manifests.label'))
+                ->indicator(__('nox::admin.resources.theme.table.filters.load_manifests.indicator'))
                 ->default(),
         ];
     }
@@ -197,15 +197,15 @@ class BrowseModules extends ListRecords
     protected function getTableActions(): array
     {
         return [
-            Tables\Actions\Action::make('install-module')
-                ->label(__('nox::admin.resources.module.table.actions.install'))
+            Tables\Actions\Action::make('install-theme')
+                ->label(__('nox::admin.resources.theme.table.actions.install'))
                 ->button()
                 ->icon('heroicon-o-download')
-                ->action('installModule')
+                ->action('installTheme')
                 ->requiresConfirmation(),
             Tables\Actions\ActionGroup::make([
-                Tables\Actions\Action::make('view-module')
-                    ->label(__('nox::admin.resources.module.table.actions.view'))
+                Tables\Actions\Action::make('view-theme')
+                    ->label(__('nox::admin.resources.theme.table.actions.view'))
                     ->icon('heroicon-o-external-link')
                     ->url(static fn(PackagistPackage $record): string => $record->url)
                     ->openUrlInNewTab(),

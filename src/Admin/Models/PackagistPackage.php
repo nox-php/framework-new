@@ -1,11 +1,11 @@
 <?php
 
-namespace Nox\Framework\Module\Models;
+namespace Nox\Framework\Admin\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Sushi\Sushi;
 
-class PackagistModule extends Model
+class PackagistPackage extends Model
 {
     use Sushi;
 

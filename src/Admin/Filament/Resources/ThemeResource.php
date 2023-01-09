@@ -78,6 +78,7 @@ class ThemeResource extends Resource
     {
         return [
             'index' => Pages\ListThemes::route('/'),
+            'browse' => Pages\BrowseThemes::route('/browse'),
             'view' => Pages\ViewTheme::route('/{record}'),
         ];
     }
