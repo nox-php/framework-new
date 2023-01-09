@@ -72,7 +72,7 @@ class ListModules extends ListRecords
         return [
             Action::make('browse-modules')
                 ->label('Browse modules')
-                ->url(ModuleResource::getUrl('browse'), true)
+                ->url(ModuleResource::getUrl('browse'))
         ];
     }
 }
