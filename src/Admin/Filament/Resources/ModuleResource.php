@@ -8,7 +8,7 @@ use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
 use Nox\Framework\Admin\Filament\Resources\ModuleResource\Pages;
-use Nox\Framework\Extend\Models\Module;
+use Nox\Framework\Module\Models\Module;
 
 class ModuleResource extends Resource
 {

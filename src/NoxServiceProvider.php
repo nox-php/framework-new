@@ -6,10 +6,9 @@ use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Support\AggregateServiceProvider;
 use Nox\Framework\Admin\Providers\AdminServiceProvider;
 use Nox\Framework\Auth\Providers\AuthServiceProvider;
-use Nox\Framework\Extend\Providers\ModuleServiceProvider;
 use Nox\Framework\Installer\Providers\InstallerServiceProvider;
+use Nox\Framework\Module\Providers\ModuleServiceProvider;
 use Nox\Framework\Settings\Providers\SettingsServiceProvider;
-use Nox\Framework\Theme\Providers\ThemeServiceProvider;
 use Nox\Framework\Transformer\Provider\TransformerServiceProvider;
 use Nox\Framework\Updater\Jobs\NoxCheckUpdateJob;
 use Spatie\Health\Commands\DispatchQueueCheckJobsCommand;
@@ -25,7 +24,6 @@ class NoxServiceProvider extends AggregateServiceProvider
         InstallerServiceProvider::class,
         AdminServiceProvider::class,
         ModuleServiceProvider::class,
-        ThemeServiceProvider::class,
     ];
 
     public function register(): void

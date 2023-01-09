@@ -19,14 +19,13 @@ class Packagist
         array $tags,
         int $page,
         int $perPage
-    ): array
-    {
+    ): array {
         return Http::asJson()
-            ->get(static::$baseUrl . '/search.json', [
+            ->get(static::$baseUrl.'/search.json', [
                 'q' => $query,
                 'tags' => $tags,
                 'page' => $page,
-                'per_page' => $perPage
+                'per_page' => $perPage,
             ])
             ->json();
     }
@@ -42,7 +41,7 @@ class Packagist
             });
 
         return collect(array_merge(...$responses))
-            ->map(static fn(Response $response, $key) => $response->json('packages.' . $key . '.0'))
+            ->map(static fn (Response $response, $key) => $response->json('packages.'.$key.'.0'))
             ->filter()
             ->all();
     }
@@ -51,7 +50,7 @@ class Packagist
     {
         return Http::pool(static function (Pool $pool) use ($packages) {
             foreach ($packages as $package) {
-                $pool->as($package)->asJson()->get(static::$baseRepositoryUrl . '/' . $package . '.json');
+                $pool->as($package)->asJson()->get(static::$baseRepositoryUrl.'/'.$package.'.json');
             }
         });
     }

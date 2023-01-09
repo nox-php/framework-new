@@ -8,56 +8,12 @@ return [
     ],
 
     'resources' => [
-        'theme' => [
-            'navigation_label' => 'Themes',
-            'label' => 'Theme',
-
-            'actions' => [
-                'install' => 'Install themes',
-                'enable' => 'Enable',
-                'disable' => 'Disable',
-            ],
-
-            'form' => [
-                'inputs' => [
-                    'name' => 'Name',
-                    'version' => 'Version',
-                    'path' => 'Path',
-                    'description' => 'Description',
-                    'parent' => 'Parent theme',
-                ],
-            ],
-
-            'table' => [
-                'columns' => [
-                    'name' => 'Name',
-                    'description' => 'Description',
-                    'version' => 'Version',
-                    'status' => [
-                        'label' => 'Status',
-
-                        'enum' => [
-                            'enabled' => 'Enabled',
-                            'disabled' => 'Disabled',
-                        ],
-                    ],
-                ],
-
-                'actions' => [
-                    'enable' => 'Enable',
-                    'disable' => 'Disable',
-                ],
-            ],
-        ],
-
         'module' => [
             'navigation_label' => 'Modules',
             'label' => 'Module',
 
             'actions' => [
-                'install' => 'Install modules',
-                'enable' => 'Enable',
-                'disable' => 'Disable',
+                'browse' => 'Browse modules',
             ],
 
             'form' => [
@@ -74,24 +30,6 @@ return [
                     'name' => 'Name',
                     'description' => 'Description',
                     'version' => 'Version',
-                    'status' => [
-                        'label' => 'Status',
-
-                        'enum' => [
-                            'enabled' => 'Enabled',
-                            'disabled' => 'Disabled',
-                        ],
-                    ],
-                ],
-
-                'actions' => [
-                    'enable' => 'Enable',
-                    'disable' => 'Disable',
-                ],
-
-                'bulk_actions' => [
-                    'enable' => 'Enable selected',
-                    'disable' => 'Disable selected',
                 ],
             ],
         ],
@@ -255,6 +193,64 @@ return [
     ],
 
     'notifications' => [
+        'modules' => [
+            'not_found' => 'Module could not be found',
+
+            'install' => [
+                'pending' => [
+                    'title' => 'Pending installation: :name',
+                    'body' => 'You will be notified once it has been installed',
+                ],
+
+                'success' => [
+                    'title' => ':name',
+                    'body' => 'Successfully installed module',
+                ],
+
+                'failed' => [
+                    'title' => ':name',
+                    'body' => 'Failed to install module',
+                ],
+
+                'actions' => [
+                    'view_log' => 'View log',
+                ],
+            ],
+
+            'delete' => [
+                'pending' => [
+                    'title' => 'Pending deletion: :name',
+                    'body' => 'You will be notified once it has been deleted',
+                ],
+
+                'success' => [
+                    'title' => ':name',
+                    'body' => 'Successfully deleted module',
+                ],
+
+                'failed' => [
+                    'title' => ':name',
+                    'body' => 'Failed to delete module',
+                ],
+
+                'actions' => [
+                    'view_log' => 'View log',
+                ],
+            ],
+
+            'publish' => [
+                'success' => [
+                    'title' => ':name',
+                    'body' => 'Successfully published module',
+                ],
+
+                'failed' => [
+                    'title' => ':name',
+                    'body' => 'Failed to publish module',
+                ],
+            ],
+        ],
+
         'nox_update' => [
             'success' => [
                 'title' => 'Successfully updated Nox',

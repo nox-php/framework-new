@@ -274,9 +274,6 @@ class InstallNoxCommand extends Command
 
     protected function install(): bool
     {
-        File::ensureDirectoryExists(base_path('modules'));
-        File::ensureDirectoryExists(base_path('themes'));
-
         $envPath = base_path('.env');
         if (! File::exists($envPath)) {
             File::put($envPath, '');

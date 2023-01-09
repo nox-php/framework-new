@@ -190,7 +190,7 @@ class UserResource extends Resource
     public static function getGlobalSearchResultTitle(Model $record): string
     {
         return transformer(
-            'nox.themes.resource.title',
+            'nox.user.resource.title',
             $record->discord_name,
             [
                 'user' => $record,

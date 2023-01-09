@@ -12,8 +12,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Cache;
 use Nox\Framework\Admin\Filament\Resources\ModuleResource;
-use Nox\Framework\Extend\Contracts\ModuleRepository;
-use Nox\Framework\Extend\Models\PackagistModule;
+use Nox\Framework\Module\Contracts\ModuleRepository;
+use Nox\Framework\Module\Models\PackagistModule;
 use Nox\Framework\Support\Packagist;
 
 class BrowseModules extends Page implements Tables\Contracts\HasTable
@@ -26,14 +26,13 @@ class BrowseModules extends Page implements Tables\Contracts\HasTable
 
     private static array $tagsBlacklist = [
         'nox-module',
-        'php'
+        'php',
     ];
 
     public function installModule(
         ModuleRepository $modules,
         PackagistModule $record
-    )
-    {
+    ) {
         $modules->install($record->name);
     }
 
@@ -55,13 +54,13 @@ class BrowseModules extends Page implements Tables\Contracts\HasTable
 
         if (
             $response['total'] === 0 ||
-            !$this->isManifestLoadingEnabled()
+            ! $this->isManifestLoadingEnabled()
         ) {
             return $response;
         }
 
         $names = collect($response['results'])
-            ->filter(static fn(PackagistModule $module): bool => $module['manifest'] === null)
+            ->filter(static fn (PackagistModule $module): bool => $module['manifest'] === null)
             ->keys()
             ->all();
 
@@ -69,10 +68,10 @@ class BrowseModules extends Page implements Tables\Contracts\HasTable
 
         foreach ($manifests as $name => $manifest) {
             $response['results'][$name]->forceFill([
-                'manifest' => $manifest
+                'manifest' => $manifest,
             ]);
 
-            Cache::set('packagist.manifest.' . $name, $manifest, now()->addDay());
+            Cache::set('packagist.manifest.'.$name, $manifest, now()->addDay());
         }
 
         return $response;
@@ -90,23 +89,23 @@ class BrowseModules extends Page implements Tables\Contracts\HasTable
                 );
 
                 $response['results'] = collect($response['results'])
-                    ->filter(static fn(array $module): bool => isset($module['downloads']))
-                    ->mapWithKeys(static fn(array $module): array => [
+                    ->filter(static fn (array $module): bool => isset($module['downloads']))
+                    ->mapWithKeys(static fn (array $module): array => [
                         $module['name'] => (new PackagistModule())->forceFill([
                             'name' => $module['name'],
                             'description' => $module['description'],
                             'url' => $module['url'],
                             'downloads' => $module['downloads'],
-                            'manifest' => Cache::get('packagist.manifest.' . $module['name'])
-                        ])
+                            'manifest' => Cache::get('packagist.manifest.'.$module['name']),
+                        ]),
                     ])
                     ->all();
 
                 return $response;
             },
-            static fn() => [
+            static fn () => [
                 'results' => [],
-                'total' => 0
+                'total' => 0,
             ]
         );
     }
@@ -121,7 +120,7 @@ class BrowseModules extends Page implements Tables\Contracts\HasTable
         return [
             Pages\Actions\Action::make('go-back')
                 ->label('Go back')
-                ->url(ModuleResource::getUrl())
+                ->url(ModuleResource::getUrl()),
         ];
     }
 
@@ -131,7 +130,7 @@ class BrowseModules extends Page implements Tables\Contracts\HasTable
             Tables\Filters\Filter::make('load_manifests')
                 ->label('Load Manifests (can slow down the table)')
                 ->indicator('Manifests')
-                ->default()
+                ->default(),
         ];
     }
 
@@ -146,29 +145,29 @@ class BrowseModules extends Page implements Tables\Contracts\HasTable
                         ->wrap(),
                     Tables\Columns\TextColumn::make('description')
                         ->label('Description')
-                        ->wrap()
+                        ->wrap(),
                 ])->space(),
                 Tables\Columns\Layout\Stack::make([
                     Tables\Columns\BadgeColumn::make('downloads')
                         ->label('Downloads')
                         ->color('success')
                         ->icon('heroicon-o-download')
-                        ->formatStateUsing(static fn(int $state): string => number_format($state)),
+                        ->formatStateUsing(static fn (int $state): string => number_format($state)),
                     Tables\Columns\TagsColumn::make('manifest.keywords')
                         ->label('Tags')
-                        ->getStateUsing(static fn(PackagistModule $record): array => $record->manifest === null
+                        ->getStateUsing(static fn (PackagistModule $record): array => $record->manifest === null
                             ? []
                             : collect($record->manifest['keywords'])
-                                ->filter(static fn(string $tag): bool => !in_array($tag, static::$tagsBlacklist))
+                                ->filter(static fn (string $tag): bool => ! in_array($tag, static::$tagsBlacklist))
                                 ->all()
                         )
                         ->limit()
-                        ->hidden(fn() => !$this->isManifestLoadingEnabled()),
+                        ->hidden(fn () => ! $this->isManifestLoadingEnabled()),
                 ])->space(2),
                 Tables\Columns\TagsColumn::make('manifest.authors')
-                    ->getStateUsing(static fn(PackagistModule $record): array => collect($record->manifest['authors'])->pluck('name')->all())
+                    ->getStateUsing(static fn (PackagistModule $record): array => collect($record->manifest['authors'])->pluck('name')->all())
                     ->limit()
-                    ->hidden(fn() => !$this->isManifestLoadingEnabled()),
+                    ->hidden(fn () => ! $this->isManifestLoadingEnabled()),
             ]),
             Tables\Columns\Layout\Panel::make([
                 Tables\Columns\Layout\Stack::make([
@@ -178,12 +177,12 @@ class BrowseModules extends Page implements Tables\Contracts\HasTable
                         Tables\Columns\TagsColumn::make('manifest.license')
                             ->label('Licenses'),
                         Tables\Columns\TextColumn::make('manifest.time')
-                            ->formatStateUsing(static fn(?string $state): string => 'Last updated ' . Carbon::parse($state)->diffForHumans()),
+                            ->formatStateUsing(static fn (?string $state): string => 'Last updated '.Carbon::parse($state)->diffForHumans()),
                     ]),
-                ])->space()
+                ])->space(),
             ])
                 ->collapsible()
-                ->hidden(fn() => !$this->isManifestLoadingEnabled())
+                ->hidden(fn () => ! $this->isManifestLoadingEnabled()),
         ];
     }
 
@@ -199,9 +198,9 @@ class BrowseModules extends Page implements Tables\Contracts\HasTable
                 Tables\Actions\Action::make('view-module')
                     ->label('View')
                     ->icon('heroicon-o-external-link')
-                    ->url(static fn(PackagistModule $record): string => $record->url)
-                    ->openUrlInNewTab()
-            ])
+                    ->url(static fn (PackagistModule $record): string => $record->url)
+                    ->openUrlInNewTab(),
+            ]),
         ];
     }
 
@@ -214,7 +213,7 @@ class BrowseModules extends Page implements Tables\Contracts\HasTable
     {
         return (new PackagistModule())
             ->forceFill([
-                'name' => $key
+                'name' => $key,
             ]);
     }
 }
