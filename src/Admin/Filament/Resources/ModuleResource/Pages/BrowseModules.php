@@ -36,7 +36,7 @@ class BrowseModules extends Page implements Tables\Contracts\HasTable
         PackagistModule $record
     ) {
         if (
-            ($status = $modules->delete($record->name)) &&
+            ($status = $modules->install($record->name)) &&
             $status === ModuleStatus::InstallPending
         ) {
             Notification::make()
@@ -49,7 +49,7 @@ class BrowseModules extends Page implements Tables\Contracts\HasTable
         }
 
         Notification::make()
-            ->success()
+            ->danger()
             ->title(__('nox::admin.notifications.modules.install.failed.title', ['name' => $record->name]))
             ->body(__($status->value))
             ->send();

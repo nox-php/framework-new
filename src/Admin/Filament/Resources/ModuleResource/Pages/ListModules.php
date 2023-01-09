@@ -33,7 +33,7 @@ class ListModules extends ListRecords
         }
 
         Notification::make()
-            ->success()
+            ->danger()
             ->title(__('nox::admin.notifications.modules.delete.failed.title', ['name' => $record->name]))
             ->body(__($status->value))
             ->send();
@@ -55,7 +55,7 @@ class ListModules extends ListRecords
                     ->send();
             } else {
                 Notification::make()
-                    ->success()
+                    ->danger()
                     ->title(__('nox::admin.notifications.modules.delete.failed.title', ['name' => $record->name]))
                     ->body(__($status->value))
                     ->send();

@@ -173,7 +173,7 @@ class Settings extends Page
                 ->send();
         } else {
             Notification::make()
-                ->success()
+                ->danger()
                 ->title(__('nox::admin.notifications.settings.failed.config.title'))
                 ->body(__('nox::admin.notifications.settings.failed.config.body'))
                 ->send();
