@@ -14,13 +14,4 @@ class ThemeServiceProvider extends ServiceProvider
         $this->app->alias(ThemeRepositoryContract::class, 'themes');
         $this->app->singleton(ThemeRepositoryContract::class, ThemeRepository::class);
     }
-
-    public function boot(): void
-    {
-        Themes::boot();
-
-        if (Themes::enabled() === null) {
-            $this->loadRoutesFrom(__DIR__.'/../../../routes/landing.php');
-        }
-    }
 }

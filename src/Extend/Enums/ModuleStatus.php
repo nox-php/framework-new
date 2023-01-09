@@ -30,6 +30,8 @@ enum ModuleStatus: string
 
     case InstallExtractFailed = 'nox::module.install.failed.extract_failed';
 
+    case DeletePending = 'nox::module.delete.pending.body';
+
     case DeleteSuccess = 'nox::module.delete.success.body';
 
     case DeleteFailed = 'nox::module.delete.failed.body';

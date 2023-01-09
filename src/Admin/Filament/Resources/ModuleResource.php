@@ -70,51 +70,15 @@ class ModuleResource extends Resource
                     ->label(__('nox::admin.resources.module.table.columns.version'))
                     ->sortable()
                     ->searchable(),
-                Tables\Columns\BadgeColumn::make('enabled')
-                    ->label(__('nox::admin.resources.module.table.columns.status.label'))
-                    ->enum([
-                        true => __('nox::admin.resources.module.table.columns.status.enum.enabled'),
-                        false => __('nox::admin.resources.module.table.columns.status.enum.disabled'),
-                    ])
-                    ->icons([
-                        'heroicon-o-check' => true,
-                        'heroicon-o-x' => false,
-                    ])
-                    ->colors([
-                        'success' => true,
-                        'danger' => false,
-                    ]),
             ])
             ->actions([
-                Tables\Actions\Action::make('enable-module')
-                    ->label(__('nox::admin.resources.module.table.actions.enable'))
-                    ->requiresConfirmation()
-                    ->action('enableModule')
-                    ->hidden(static fn (Module $record): bool => $record->enabled),
-                Tables\Actions\Action::make('disable-module')
-                    ->label(__('nox::admin.resources.module.table.actions.disable'))
-                    ->color('danger')
-                    ->requiresConfirmation()
-                    ->action('disableModule')
-                    ->hidden(static fn (Module $record): bool => ! $record->enabled),
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\ActionGroup::make([
-                    Tables\Actions\ViewAction::make(),
                     Tables\Actions\DeleteAction::make()
                         ->action('deleteModule'),
                 ]),
             ])
             ->bulkActions([
-                Tables\Actions\BulkAction::make('bulk-enable-modules')
-                    ->label(__('nox::admin.resources.module.table.bulk_actions.enable'))
-                    ->icon('heroicon-o-check')
-                    ->requiresConfirmation()
-                    ->action('bulkEnableModules'),
-                Tables\Actions\BulkAction::make('bulk-disable-modules')
-                    ->label(__('nox::admin.resources.module.table.bulk_actions.disable'))
-                    ->icon('heroicon-o-x')
-                    ->color('danger')
-                    ->requiresConfirmation()
-                    ->action('bulkDisableModules'),
                 Tables\Actions\DeleteBulkAction::make()
                     ->action('bulkDeleteModules'),
             ]);

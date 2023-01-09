@@ -14,9 +14,4 @@ class ModuleServiceProvider extends ServiceProvider
         $this->app->alias(ModuleRepositoryContract::class, 'modules');
         $this->app->singleton(ModuleRepositoryContract::class, ModuleRepository::class);
     }
-
-    public function boot(): void
-    {
-        Modules::boot();
-    }
 }

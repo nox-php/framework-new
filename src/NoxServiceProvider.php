@@ -36,8 +36,6 @@ class NoxServiceProvider extends AggregateServiceProvider
         $this->mergeConfigFrom(__DIR__.'/../config/nox.php', 'nox');
         $this->mergeConfigFrom(__DIR__.'/../config/localisation.php', 'localisation');
 
-        $this->addMacros();
-
         parent::register();
     }
 
@@ -60,24 +58,6 @@ class NoxServiceProvider extends AggregateServiceProvider
         }
 
         $this->setupScheduler();
-    }
-
-    protected function addMacros(): void
-    {
-        $this->app->resolving('files', function () {
-            File::macro('search', function (string $path, string $name): array {
-                if (! File::exists($path)) {
-                    return [];
-                }
-
-                $name = Str::lower($name);
-
-                return collect(File::allFiles($path))
-                    ->filter(static fn (SplFileInfo $file): bool => Str::lower($file->getFileName()) === $name)
-                    ->map(static fn (SplFileInfo $file): string => $file->getPathname())
-                    ->all();
-            });
-        });
     }
 
     protected function setupScheduler(): void

@@ -7,7 +7,6 @@ return [
         'drivers' => [
             'file' => [
                 'disk' => 'local',
-
                 'path' => 'settings.json',
             ],
         ],
@@ -38,14 +37,12 @@ return [
 
     'admin' => [
         'register_theme' => true,
-
         'register_groups' => true,
     ],
 
     'modules' => [
         'cache' => [
             'enabled' => true,
-
             'key' => 'nox.modules.all',
         ],
     ],
@@ -53,7 +50,6 @@ return [
     'themes' => [
         'cache' => [
             'enabled' => true,
-
             'key' => 'nox.themes.all',
         ],
     ],
