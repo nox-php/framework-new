@@ -129,7 +129,7 @@ class BrowseModules extends Page implements Tables\Contracts\HasTable
         return [
             Tables\Filters\Filter::make('load_manifests')
                 ->label(__('nox::admin.resources.module.table.filters.load_manifests.label'))
-                ->label(__('nox::admin.resources.module.table.filters.load_manifests.indicator'))
+                ->indicator(__('nox::admin.resources.module.table.filters.load_manifests.indicator'))
                 ->default(),
         ];
     }
