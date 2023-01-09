@@ -34,7 +34,8 @@ class BrowseModules extends Page implements Tables\Contracts\HasTable
     public function installModule(
         ModuleRepository $modules,
         PackagistModule $record
-    ) {
+    )
+    {
         if (
             ($status = $modules->install($record->name)) &&
             $status === ModuleStatus::InstallPending
@@ -44,8 +45,6 @@ class BrowseModules extends Page implements Tables\Contracts\HasTable
                 ->title(__('nox::admin.notifications.modules.install.success.title', ['name' => $record->name]))
                 ->body(__($status->value))
                 ->send();
-
-            return redirect(ModuleResource::getUrl());
         }
 
         Notification::make()
@@ -73,13 +72,13 @@ class BrowseModules extends Page implements Tables\Contracts\HasTable
 
         if (
             $response['total'] === 0 ||
-            ! $this->isManifestLoadingEnabled()
+            !$this->isManifestLoadingEnabled()
         ) {
             return $response;
         }
 
         $names = collect($response['results'])
-            ->filter(static fn (PackagistModule $module): bool => $module['manifest'] === null)
+            ->filter(static fn(PackagistModule $module): bool => $module['manifest'] === null)
             ->keys()
             ->all();
 
@@ -90,7 +89,7 @@ class BrowseModules extends Page implements Tables\Contracts\HasTable
                 'manifest' => $manifest,
             ]);
 
-            Cache::set('packagist.manifest.'.$name, $manifest, now()->addDay());
+            Cache::set('packagist.manifest.' . $name, $manifest, now()->addDay());
         }
 
         return $response;
@@ -108,21 +107,21 @@ class BrowseModules extends Page implements Tables\Contracts\HasTable
                 );
 
                 $response['results'] = collect($response['results'])
-                    ->filter(static fn (array $module): bool => isset($module['downloads']))
-                    ->mapWithKeys(static fn (array $module): array => [
+                    ->filter(static fn(array $module): bool => isset($module['downloads']))
+                    ->mapWithKeys(static fn(array $module): array => [
                         $module['name'] => (new PackagistModule())->forceFill([
                             'name' => $module['name'],
                             'description' => $module['description'],
                             'url' => $module['url'],
                             'downloads' => $module['downloads'],
-                            'manifest' => Cache::get('packagist.manifest.'.$module['name']),
+                            'manifest' => Cache::get('packagist.manifest.' . $module['name']),
                         ]),
                     ])
                     ->all();
 
                 return $response;
             },
-            static fn () => [
+            static fn() => [
                 'results' => [],
                 'total' => 0,
             ]
@@ -168,21 +167,21 @@ class BrowseModules extends Page implements Tables\Contracts\HasTable
                     Tables\Columns\BadgeColumn::make('downloads')
                         ->color('success')
                         ->icon('heroicon-o-download')
-                        ->formatStateUsing(static fn (int $state): string => number_format($state)),
+                        ->formatStateUsing(static fn(int $state): string => number_format($state)),
                     Tables\Columns\TagsColumn::make('manifest.keywords')
-                        ->getStateUsing(static fn (PackagistModule $record): array => $record->manifest === null
+                        ->getStateUsing(static fn(PackagistModule $record): array => $record->manifest === null
                             ? []
                             : collect($record->manifest['keywords'])
-                                ->filter(static fn (string $tag): bool => ! in_array($tag, static::$tagsBlacklist))
+                                ->filter(static fn(string $tag): bool => !in_array($tag, static::$tagsBlacklist))
                                 ->all()
                         )
                         ->limit()
-                        ->hidden(fn () => ! $this->isManifestLoadingEnabled()),
+                        ->hidden(fn() => !$this->isManifestLoadingEnabled()),
                 ])->space(2),
                 Tables\Columns\TagsColumn::make('manifest.authors')
-                    ->getStateUsing(static fn (PackagistModule $record): array => collect($record->manifest['authors'])->pluck('name')->all())
+                    ->getStateUsing(static fn(PackagistModule $record): array => collect($record->manifest['authors'])->pluck('name')->all())
                     ->limit()
-                    ->hidden(fn () => ! $this->isManifestLoadingEnabled()),
+                    ->hidden(fn() => !$this->isManifestLoadingEnabled()),
             ]),
             Tables\Columns\Layout\Panel::make([
                 Tables\Columns\Layout\Stack::make([
@@ -190,12 +189,12 @@ class BrowseModules extends Page implements Tables\Contracts\HasTable
                         Tables\Columns\BadgeColumn::make('manifest.version'),
                         Tables\Columns\TagsColumn::make('manifest.license'),
                         Tables\Columns\TextColumn::make('manifest.time')
-                            ->formatStateUsing(static fn (?string $state): string => 'Last updated '.Carbon::parse($state)->diffForHumans()),
+                            ->formatStateUsing(static fn(?string $state): string => 'Last updated ' . Carbon::parse($state)->diffForHumans()),
                     ]),
                 ])->space(),
             ])
                 ->collapsible()
-                ->hidden(fn () => ! $this->isManifestLoadingEnabled()),
+                ->hidden(fn() => !$this->isManifestLoadingEnabled()),
         ];
     }
 
@@ -206,12 +205,13 @@ class BrowseModules extends Page implements Tables\Contracts\HasTable
                 ->label(__('nox::admin.resources.module.table.actions.install'))
                 ->button()
                 ->icon('heroicon-o-download')
-                ->action('installModule'),
+                ->action('installModule')
+                ->requiresConfirmation(),
             Tables\Actions\ActionGroup::make([
                 Tables\Actions\Action::make('view-module')
                     ->label(__('nox::admin.resources.module.table.actions.view'))
                     ->icon('heroicon-o-external-link')
-                    ->url(static fn (PackagistModule $record): string => $record->url)
+                    ->url(static fn(PackagistModule $record): string => $record->url)
                     ->openUrlInNewTab(),
             ]),
         ];

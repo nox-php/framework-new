@@ -28,8 +28,6 @@ class ListModules extends ListRecords
                 ->title(__('nox::admin.notifications.modules.delete.success.title', ['name' => $record->name]))
                 ->body(__($status->value))
                 ->send();
-
-            return redirect(ModuleResource::getUrl());
         }
 
         Notification::make()
@@ -61,8 +59,6 @@ class ListModules extends ListRecords
                     ->send();
             }
         }
-
-        return redirect(ModuleResource::getUrl());
     }
 
     protected function getActions(): array
