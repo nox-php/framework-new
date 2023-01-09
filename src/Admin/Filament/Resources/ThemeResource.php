@@ -62,12 +62,12 @@ class ThemeResource extends Resource
                     ->searchable(),
             ])
             ->actions([
-                Tables\Actions\Action::make()
+                Tables\Actions\Action::make('enable-theme')
                     ->label(__('nox::admin.resources.theme.table.actions.enable'))
                     ->requiresConfirmation()
                     ->action('enableTheme')
                     ->hidden(static fn(Theme $theme): bool => $theme->enabled),
-                Tables\Actions\Action::make()
+                Tables\Actions\Action::make('disable-theme')
                     ->label(__('nox::admin.resources.theme.table.actions.disable'))
                     ->requiresConfirmation()
                     ->action('disableTheme')
