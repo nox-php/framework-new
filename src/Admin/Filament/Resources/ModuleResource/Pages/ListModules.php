@@ -17,8 +17,7 @@ class ListModules extends ListRecords
     public function deleteModule(
         ModuleRepository $modules,
         Module $record
-    )
-    {
+    ) {
         if (
             ($status = $modules->delete($record->name)) &&
             $status === ModuleStatus::DeletePending
@@ -42,8 +41,7 @@ class ListModules extends ListRecords
     public function bulkDeleteModules(
         ModuleRepository $modules,
         Collection $records
-    )
-    {
+    ) {
         foreach ($records as $record) {
             if (
                 ($status = $modules->delete($record->name)) &&

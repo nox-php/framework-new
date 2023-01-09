@@ -33,7 +33,7 @@ class ModuleResource extends Resource
                     ->label(__('nox::admin.resources.module.form.inputs.name')),
                 Forms\Components\TextInput::make('version')
                     ->label(__('nox::admin.resources.module.form.inputs.version'))
-                    ->formatStateUsing(static fn(string $state): string => 'v' . $state),
+                    ->formatStateUsing(static fn (string $state): string => 'v'.$state),
                 Forms\Components\TextInput::make('path')
                     ->label(__('nox::admin.resources.module.form.inputs.path'))
                     ->columnSpanFull(),
@@ -78,8 +78,8 @@ class ModuleResource extends Resource
     {
         return [
             'index' => Pages\ListModules::route('/'),
+            'browse' => Pages\BrowseModules::route('/browse'),
             'view' => Pages\ViewModule::route('/{record}'),
-            'browse' => Pages\BrowseModules::route('/browse')
         ];
     }
 

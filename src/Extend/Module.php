@@ -14,8 +14,7 @@ class Module implements Arrayable
         protected string $prettyVersion,
         protected string $path,
         protected array $config
-    )
-    {
+    ) {
     }
 
     public function name(): string
@@ -44,7 +43,7 @@ class Module implements Arrayable
             return $this->path;
         }
 
-        return $this->path . '/' . rtrim($path);
+        return $this->path.'/'.rtrim($path);
     }
 
     public function config(?string $key = null, $default = null)
@@ -76,7 +75,7 @@ class Module implements Arrayable
             'version' => $this->version,
             'pretty_version' => $this->prettyVersion,
             'path' => $this->path,
-            'config' => $this->config
+            'config' => $this->config,
         ];
     }
 }

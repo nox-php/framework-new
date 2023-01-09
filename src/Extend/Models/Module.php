@@ -22,7 +22,7 @@ class Module extends Model
             'name' => 'string',
             'description' => 'string',
             'version' => 'string',
-            'pretty_version' => 'string'
+            'pretty_version' => 'string',
         ];
     }
 
@@ -42,7 +42,7 @@ class Module extends Model
                 'description' => $module->getDescription(),
                 'version' => $module->version(),
                 'pretty_version' => $module->prettyVersion(),
-                'path' => $module->path()
+                'path' => $module->path(),
             ])
             ->values()
             ->all();

@@ -21,7 +21,7 @@ class PackagistModule extends Model
             'name' => 'string',
             'description' => 'string',
             'url' => 'string',
-            'downloads' => 'integer'
+            'downloads' => 'integer',
         ];
     }
 

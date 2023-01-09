@@ -4,7 +4,6 @@ namespace Nox\Framework\Extend\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Nox\Framework\Extend\Contracts\ModuleRepository as ModuleRepositoryContract;
-use Nox\Framework\Extend\Facades\Modules;
 use Nox\Framework\Extend\Repository\ModuleRepository;
 
 class ModuleServiceProvider extends ServiceProvider

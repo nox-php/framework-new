@@ -4,8 +4,6 @@ namespace Nox\Framework;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Support\AggregateServiceProvider;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Str;
 use Nox\Framework\Admin\Providers\AdminServiceProvider;
 use Nox\Framework\Auth\Providers\AuthServiceProvider;
 use Nox\Framework\Extend\Providers\ModuleServiceProvider;
@@ -17,7 +15,6 @@ use Nox\Framework\Updater\Jobs\NoxCheckUpdateJob;
 use Spatie\Health\Commands\DispatchQueueCheckJobsCommand;
 use Spatie\Health\Commands\RunHealthChecksCommand;
 use Spatie\Health\Commands\ScheduleCheckHeartbeatCommand;
-use SplFileInfo;
 
 class NoxServiceProvider extends AggregateServiceProvider
 {

@@ -38,10 +38,10 @@ class BrowseModules extends Page implements HasTable
         $query = [
             'page' => $this->page,
             'per_page' => $this->tableRecordsPerPage,
-            'tags' => 'psr-4'
+            'tags' => 'psr-4',
         ];
 
-        if (!empty($this->tableSearchQuery)) {
+        if (! empty($this->tableSearchQuery)) {
             $query['q'] = $this->tableSearchQuery;
         }
 
@@ -52,17 +52,17 @@ class BrowseModules extends Page implements HasTable
                     ->json();
 
                 $response['results'] = collect($response['results'])
-                    ->map(static fn(array $module): PackagistModule => new PackagistModule([
+                    ->map(static fn (array $module): PackagistModule => new PackagistModule([
                         'name' => $module['name'],
                         'description' => $module['description'],
                         'url' => $module['url'],
-                        'downloads' => $module['downloads']
+                        'downloads' => $module['downloads'],
                     ]))
                     ->all();
 
                 return $response;
             },
-            static fn() => []
+            static fn () => []
         );
     }
 
@@ -71,7 +71,7 @@ class BrowseModules extends Page implements HasTable
         return [
             TextColumn::make('name')
                 ->label('Name')
-                ->searchable()
+                ->searchable(),
         ];
     }
 }

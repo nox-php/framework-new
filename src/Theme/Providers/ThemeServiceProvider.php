@@ -4,7 +4,6 @@ namespace Nox\Framework\Theme\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Nox\Framework\Theme\Contracts\ThemeRepository as ThemeRepositoryContract;
-use Nox\Framework\Theme\Facades\Themes;
 use Nox\Framework\Theme\Repository\ThemeRepository;
 
 class ThemeServiceProvider extends ServiceProvider

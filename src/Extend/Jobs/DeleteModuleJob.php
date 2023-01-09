@@ -24,18 +24,17 @@ class DeleteModuleJob implements ShouldQueue, ShouldBeUnique
     public function __construct(
         private string $name,
         private User $user
-    )
-    {
+    ) {
     }
 
     public function handle(Composer $composer): void
     {
         rescue(
-            fn() => $this->remove($composer),
-            fn(Exception $e) => $this->handleError(activity()
+            fn () => $this->remove($composer),
+            fn (Exception $e) => $this->handleError(activity()
                 ->by($this->user)
                 ->event('nox.module.delete')
-                ->log((string)$e))
+                ->log((string) $e))
         );
     }
 
@@ -51,6 +50,7 @@ class DeleteModuleJob implements ShouldQueue, ShouldBeUnique
 
         if ($status !== 0) {
             $this->handleError($log);
+
             return;
         }
 
@@ -61,7 +61,7 @@ class DeleteModuleJob implements ShouldQueue, ShouldBeUnique
                 ->success()
                 ->title(__('nox::admin.notifications.nox_update.success.title'))
                 ->body(
-                    __('nox::admin.notifications.nox_update.success.body',)
+                    __('nox::admin.notifications.nox_update.success.body')
                 )
                 ->actions([
                     Action::make('view-log')

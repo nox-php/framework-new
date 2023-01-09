@@ -18,8 +18,7 @@ class ModuleRepository implements ModuleRepositoryContract
 
     public function __construct(
         protected ModuleDiscovery $discovery
-    )
-    {
+    ) {
     }
 
     public function findOrFail(string $name): Module
@@ -42,7 +41,7 @@ class ModuleRepository implements ModuleRepositoryContract
             return $this->modules;
         }
 
-        if (!$this->loadCache()) {
+        if (! $this->loadCache()) {
             $this->load();
         }
 
@@ -51,18 +50,18 @@ class ModuleRepository implements ModuleRepositoryContract
 
     protected function loadCache(): bool
     {
-        if (!$this->isCacheEnabled()) {
+        if (! $this->isCacheEnabled()) {
             return false;
         }
 
         $key = $this->getCacheKey();
 
-        if ((!$cache = Cache::get($key)) || !is_array($cache)) {
+        if ((! $cache = Cache::get($key)) || ! is_array($cache)) {
             return false;
         }
 
         $this->modules = collect($cache)
-            ->map(static fn($module): Module => Module::fromArray($module))
+            ->map(static fn ($module): Module => Module::fromArray($module))
             ->all();
 
         return true;
@@ -70,7 +69,7 @@ class ModuleRepository implements ModuleRepositoryContract
 
     protected function isCacheEnabled(): bool
     {
-        return (bool)config('nox.modules.cache.enabled');
+        return (bool) config('nox.modules.cache.enabled');
     }
 
     protected function getCacheKey(): string
@@ -81,7 +80,7 @@ class ModuleRepository implements ModuleRepositoryContract
     protected function load(): void
     {
         $this->modules = collect($this->discovery->discover())
-            ->map(static fn(array $manifest): Module => Module::fromArray($manifest))
+            ->map(static fn (array $manifest): Module => Module::fromArray($manifest))
             ->all();
 
         $this->updateCache();
@@ -89,7 +88,7 @@ class ModuleRepository implements ModuleRepositoryContract
 
     protected function updateCache(): void
     {
-        if (!$this->isCacheEnabled()) {
+        if (! $this->isCacheEnabled()) {
             return;
         }
 
@@ -124,7 +123,7 @@ class ModuleRepository implements ModuleRepositoryContract
 
     public function publish(string|Module $module, bool $migrate = true): ModuleStatus
     {
-        if (!$module = $this->getModule($module)) {
+        if (! $module = $this->getModule($module)) {
             return ModuleStatus::NotFound;
         }
 
@@ -143,11 +142,11 @@ class ModuleRepository implements ModuleRepositoryContract
     {
         $providers = [
             ...$module->config('laravel.providers', []),
-            ...$module->config('nox.providers', [])
+            ...$module->config('nox.providers', []),
         ];
 
         foreach ($providers as $provider) {
-            if (!class_exists($provider)) {
+            if (! class_exists($provider)) {
                 continue;
             }
 
@@ -155,11 +154,11 @@ class ModuleRepository implements ModuleRepositoryContract
                 'app' => app(),
             ]);
 
-            if (!method_exists($provider, 'getInstallerTags')) {
+            if (! method_exists($provider, 'getInstallerTags')) {
                 continue;
             }
 
-            $tags = (array)(app()->call([$providerInstance, 'getInstallerTags']) ?? []);
+            $tags = (array) (app()->call([$providerInstance, 'getInstallerTags']) ?? []);
 
             foreach ($tags as $tag => $force) {
                 $tag = is_string($tag) ? $tag : $force;
@@ -176,7 +175,7 @@ class ModuleRepository implements ModuleRepositoryContract
 
     public function delete(string|Module $module): ModuleStatus
     {
-        if (!$module = $this->getModule($module)) {
+        if (! $module = $this->getModule($module)) {
             return ModuleStatus::NotFound;
         }
 
@@ -194,7 +193,7 @@ class ModuleRepository implements ModuleRepositoryContract
 
     protected function clearCache(): void
     {
-        if (!$this->isCacheEnabled()) {
+        if (! $this->isCacheEnabled()) {
             return;
         }
 
