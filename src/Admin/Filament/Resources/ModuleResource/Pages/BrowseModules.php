@@ -41,13 +41,13 @@ class BrowseModules extends ListRecords
                 ->title(__('nox::admin.notifications.modules.install.success.title', ['name' => $record->name]))
                 ->body(__($status->value))
                 ->send();
+        } else {
+            Notification::make()
+                ->danger()
+                ->title(__('nox::admin.notifications.modules.install.failed.title', ['name' => $record->name]))
+                ->body(__($status->value))
+                ->send();
         }
-
-        Notification::make()
-            ->danger()
-            ->title(__('nox::admin.notifications.modules.install.failed.title', ['name' => $record->name]))
-            ->body(__($status->value))
-            ->send();
     }
 
     public function getTableRecords(): Collection|Paginator

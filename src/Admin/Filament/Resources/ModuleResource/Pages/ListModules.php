@@ -28,13 +28,13 @@ class ListModules extends ListRecords
                 ->title(__('nox::admin.notifications.modules.delete.success.title', ['name' => $record->name]))
                 ->body(__($status->value))
                 ->send();
+        } else {
+            Notification::make()
+                ->danger()
+                ->title(__('nox::admin.notifications.modules.delete.failed.title', ['name' => $record->name]))
+                ->body(__($status->value))
+                ->send();
         }
-
-        Notification::make()
-            ->danger()
-            ->title(__('nox::admin.notifications.modules.delete.failed.title', ['name' => $record->name]))
-            ->body(__($status->value))
-            ->send();
     }
 
     public function bulkDeleteModules(

@@ -24,15 +24,13 @@ class ViewModule extends ViewRecord
                 ->title(__('nox::admin.notifications.modules.delete.pending.title', ['name' => $this->record->name]))
                 ->body(__($status->value))
                 ->send();
-
-            return redirect(ModuleResource::getUrl());
+        } else {
+            Notification::make()
+                ->danger()
+                ->title(__('nox::admin.notifications.modules.delete.failed.title', ['name' => $this->record->name]))
+                ->body(__($status->value))
+                ->send();
         }
-
-        Notification::make()
-            ->danger()
-            ->title(__('nox::admin.notifications.modules.delete.failed.title', ['name' => $this->record->name]))
-            ->body(__($status->value))
-            ->send();
     }
 
     protected function getActions(): array
