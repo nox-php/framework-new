@@ -40,7 +40,7 @@ class DeleteModuleJob implements ShouldQueue, ShouldBeUnique
         );
     }
 
-    private function delete(ModuleRepository $modules, Composer $composer): void
+    private function delete(ModuleRepository $themes, Composer $composer): void
     {
         $status = $composer->remove($this->name);
 
@@ -55,7 +55,7 @@ class DeleteModuleJob implements ShouldQueue, ShouldBeUnique
             return;
         }
 
-        $modules->clear();
+        $themes->clear();
 
         Artisan::call('package:discover');
 

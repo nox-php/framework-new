@@ -1,6 +1,6 @@
 <?php
 
-namespace Nox\Framework\Module\Jobs;
+namespace Nox\Framework\Theme\Jobs;
 
 use Exception;
 use Filament\Notifications\Actions\Action;
@@ -11,41 +11,43 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\File;
 use Nox\Framework\Admin\Filament\Resources\ActivityResource;
 use Nox\Framework\Auth\Models\User;
-use Nox\Framework\Module\Contracts\ModuleRepository;
 use Nox\Framework\Support\Composer;
+use Nox\Framework\Theme\Contracts\ThemeRepository;
 use Spatie\Activitylog\Models\Activity;
 
-class InstallModuleJob implements ShouldQueue, ShouldBeUnique
+class InstallThemeJob implements ShouldQueue, ShouldBeUnique
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public function __construct(
         private string $name,
         private User $user
-    ) {
+    )
+    {
     }
 
-    public function handle(ModuleRepository $modules, Composer $composer): void
+    public function handle(ThemeRepository $themes, Composer $composer): void
     {
         rescue(
-            fn () => $this->install($modules, $composer),
-            fn (Exception $e) => $this->handleError(activity()
+            fn() => $this->install($themes, $composer),
+            fn(Exception $e) => $this->handleError(activity()
                 ->by($this->user)
-                ->event('nox.module.install')
-                ->log((string) $e))
+                ->event('nox.theme.install')
+                ->log((string)$e))
         );
     }
 
-    private function install(ModuleRepository $modules, Composer $composer): void
+    private function install(ThemeRepository $themes, Composer $composer): void
     {
         $status = $composer->require($this->name);
 
         $log = activity()
             ->by($this->user)
-            ->event('nox.module.install')
+            ->event('nox.theme.install')
             ->withProperty('status', $status)
             ->log($composer->getOutput()?->fetch() ?? '-');
 
@@ -54,21 +56,21 @@ class InstallModuleJob implements ShouldQueue, ShouldBeUnique
             return;
         }
 
-        $modules->clear();
+        $themes->clear();
 
-        Artisan::call('package:discover');
+        $this->updatePackageDiscovery();
 
         $this->user->notifyNow(
             Notification::make()
                 ->success()
-                ->title(__('nox::admin.notifications.modules.install.success.title', ['name' => $this->name]))
+                ->title(__('nox::admin.notifications.themes.install.success.title', ['name' => $this->name]))
                 ->body(
-                    __('nox::admin.notifications.modules.install.success.body')
+                    __('nox::admin.notifications.themes.install.success.body')
                 )
                 ->actions([
                     Action::make('view-log')
                         ->button()
-                        ->label(__('nox::admin.notifications.modules.install.actions.view_log'))
+                        ->label(__('nox::admin.notifications.themes.install.actions.view_log'))
                         ->color('secondary')
                         ->url(ActivityResource::getUrl('view', ['record' => $log?->id]), true)
                         ->hidden(static function () use ($log) {
@@ -84,14 +86,14 @@ class InstallModuleJob implements ShouldQueue, ShouldBeUnique
         $this->user->notifyNow(
             Notification::make()
                 ->danger()
-                ->title(__('nox::admin.notifications.modules.install.failed.title', ['name' => $this->name]))
+                ->title(__('nox::admin.notifications.themes.install.failed.title', ['name' => $this->name]))
                 ->body(
-                    __('nox::admin.notifications.modules.install.failed.body')
+                    __('nox::admin.notifications.themes.install.failed.body')
                 )
                 ->actions([
                     Action::make('view-log')
                         ->button()
-                        ->label(__('nox::admin.notifications.modules.install.actions.view_log'))
+                        ->label(__('nox::admin.notifications.themes.install.actions.view_log'))
                         ->color('secondary')
                         ->url(ActivityResource::getUrl('view', ['record' => $log?->id]), true)
                         ->hidden(static function () use ($log) {
@@ -100,6 +102,29 @@ class InstallModuleJob implements ShouldQueue, ShouldBeUnique
                 ])
                 ->toDatabase()
         );
+    }
+
+    private function updatePackageDiscovery(): void
+    {
+        rescue(function () {
+            $path = base_path('composer.json');
+
+            $data = json_decode(File::get($path, true), true, 512, JSON_THROW_ON_ERROR);
+            Arr::set(
+                $data,
+                'extra.laravel.dont-discover',
+                [
+                    ...Arr::get($data, 'extra.laravel.dont-discover', []),
+                    $this->name
+                ]
+            );
+
+            File::put(
+                $path,
+                json_encode($data, JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT),
+                true
+            );
+        });
     }
 
     public function uniqueId(): string

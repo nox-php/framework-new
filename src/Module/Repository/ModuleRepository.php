@@ -8,8 +8,8 @@ use Nox\Framework\Module\Contracts\ModuleRepository as ModuleRepositoryContract;
 use Nox\Framework\Module\Discovery\ModuleDiscovery;
 use Nox\Framework\Module\Enums\ModuleStatus;
 use Nox\Framework\Module\Exceptions\ModuleNotFoundException;
-use Nox\Framework\Module\Jobs\DeleteModuleJob;
-use Nox\Framework\Module\Jobs\InstallModuleJob;
+use Nox\Framework\Module\Jobs\DeleteThemeJob;
+use Nox\Framework\Module\Jobs\InstallThemeJob;
 use Nox\Framework\Module\Module;
 
 class ModuleRepository implements ModuleRepositoryContract
@@ -107,7 +107,7 @@ class ModuleRepository implements ModuleRepositoryContract
             return ModuleStatus::AlreadyInstalled;
         }
 
-        InstallModuleJob::dispatch($name, auth()->user());
+        InstallThemeJob::dispatch($name, auth()->user());
 
         return ModuleStatus::InstallPending;
     }
@@ -179,7 +179,7 @@ class ModuleRepository implements ModuleRepositoryContract
             return ModuleStatus::NotFound;
         }
 
-        DeleteModuleJob::dispatch($module->name(), auth()->user());
+        DeleteThemeJob::dispatch($module->name(), auth()->user());
 
         return ModuleStatus::DeletePending;
     }
