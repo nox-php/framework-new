@@ -2,9 +2,10 @@
 
 namespace Nox\Framework\Theme;
 
+use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Arr;
 
-class Theme
+class Theme implements Arrayable
 {
     public function __construct(
         protected string $name,
@@ -65,16 +66,16 @@ class Theme
         $this->enabled = $enable;
     }
 
-    public static function fromArray(array $module): static
+    public static function fromArray(array $theme): static
     {
         return new static(
-            $module['name'],
-            $module['description'] ?? null,
-            $module['version'],
-            $module['pretty_version'],
-            $module['path'],
-            $module['config'],
-            $module['enabled'] ?? false
+            $theme['name'],
+            $theme['description'] ?? null,
+            $theme['version'],
+            $theme['pretty_version'],
+            $theme['path'],
+            $theme['config'],
+            $theme['enabled'] ?? false
         );
     }
 
