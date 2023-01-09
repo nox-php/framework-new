@@ -109,7 +109,7 @@ class ModuleRepository implements ModuleRepositoryContract
 
         InstallModuleJob::dispatch($name, auth()->user());
 
-        return ModuleStatus::DeletePending;
+        return ModuleStatus::InstallPending;
     }
 
     protected function getModule(string|Module $module): ?Module

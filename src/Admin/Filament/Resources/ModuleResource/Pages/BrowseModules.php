@@ -3,6 +3,7 @@
 namespace Nox\Framework\Admin\Filament\Resources\ModuleResource\Pages;
 
 use Carbon\Carbon;
+use Filament\Notifications\Notification;
 use Filament\Pages;
 use Filament\Resources\Pages\Page;
 use Filament\Tables;
@@ -13,6 +14,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Cache;
 use Nox\Framework\Admin\Filament\Resources\ModuleResource;
 use Nox\Framework\Module\Contracts\ModuleRepository;
+use Nox\Framework\Module\Enums\ModuleStatus;
 use Nox\Framework\Module\Models\PackagistModule;
 use Nox\Framework\Support\Packagist;
 
@@ -33,7 +35,24 @@ class BrowseModules extends Page implements Tables\Contracts\HasTable
         ModuleRepository $modules,
         PackagistModule $record
     ) {
-        $modules->install($record->name);
+        if (
+            ($status = $modules->delete($record->name)) &&
+            $status === ModuleStatus::InstallPending
+        ) {
+            Notification::make()
+                ->success()
+                ->title(__('nox::admin.notifications.modules.install.success.title', ['name' => $record->name]))
+                ->body(__($status->value))
+                ->send();
+
+            return redirect(ModuleResource::getUrl());
+        }
+
+        Notification::make()
+            ->success()
+            ->title(__('nox::admin.notifications.modules.install.failed.title', ['name' => $record->name]))
+            ->body(__($status->value))
+            ->send();
     }
 
     public function getTableRecords(): Collection|Paginator

@@ -34,7 +34,7 @@ class InstallModuleJob implements ShouldQueue, ShouldBeUnique
             fn () => $this->install($modules, $composer),
             fn (Exception $e) => $this->handleError(activity()
                 ->by($this->user)
-                ->event('nox.module.delete')
+                ->event('nox.module.install')
                 ->log((string) $e))
         );
     }
@@ -85,7 +85,7 @@ class InstallModuleJob implements ShouldQueue, ShouldBeUnique
         $this->user->notifyNow(
             Notification::make()
                 ->danger()
-                ->title(__('nox::admin.notifications.modules.install.success.title', ['name' => $this->name]))
+                ->title(__('nox::admin.notifications.modules.install.failed.title', ['name' => $this->name]))
                 ->body(
                     __('nox::admin.notifications.modules.install.failed.body')
                 )

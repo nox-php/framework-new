@@ -10,6 +10,8 @@ enum ModuleStatus: string
 
     case PublishFailed = 'nox::admin.notifications.modules.install.failed.body';
 
+    case InstallPending = 'nox::admin.notifications.modules.install.pending.body';
+
     case InstallSuccess = 'nox::admin.notifications.modules.install.success.body';
 
     case AlreadyInstalled = 'nox::admin.notifications.modules.already_installed';
