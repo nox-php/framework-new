@@ -37,9 +37,9 @@ class Module extends Model
     {
         return collect(Modules::all())
             ->map(static fn ($module): array => [
-                'id' => Str::replace('/', '-', $module->getName()),
-                'name' => $module->getName(),
-                'description' => $module->getDescription(),
+                'id' => Str::replace('/', '-', $module->name()),
+                'name' => $module->name(),
+                'description' => $module->description(),
                 'version' => $module->version(),
                 'pretty_version' => $module->prettyVersion(),
                 'path' => $module->path(),

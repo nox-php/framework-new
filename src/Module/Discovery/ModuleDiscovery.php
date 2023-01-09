@@ -27,27 +27,34 @@ class ModuleDiscovery
 
     protected function getPackageManifest(string $package): ?array
     {
-        $path = $package . '/composer.json';
+        $path = InstalledVersions::getInstallPath($package);
 
-        if (!File::exists($path)) {
+        $manifestPath = $path . '/composer.json';
+
+        if (!File::exists($manifestPath)) {
             return null;
         }
 
-        $manifest = $this->loadManifest($path);
+        $manifest = $this->loadManifest($manifestPath);
         if ($manifest === null || !$this->isNoxModule($manifest)) {
             return null;
         }
 
-        return collect($manifest)
+        $manifest = collect($manifest)
             ->only([
                 'name',
                 'description',
-                'config',
+                'extra',
             ])
-            ->put('path', $package)
+            ->put('path', $path)
             ->put('version', InstalledVersions::getVersion($package))
             ->put('pretty_version', InstalledVersions::getPrettyVersion($package))
             ->all();
+
+        $manifest['config'] = $manifest['extra'];
+        unset($manifest['extra']);
+
+        return $manifest;
     }
 
     protected function loadManifest(string $path): ?array

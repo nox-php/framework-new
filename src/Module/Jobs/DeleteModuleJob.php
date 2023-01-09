@@ -42,7 +42,7 @@ class DeleteModuleJob implements ShouldQueue, ShouldBeUnique
 
     private function delete(ModuleRepository $modules, Composer $composer): void
     {
-        $status = $composer->require($this->name);
+        $status = $composer->remove($this->name);
 
         $log = activity()
             ->by($this->user)
@@ -52,7 +52,6 @@ class DeleteModuleJob implements ShouldQueue, ShouldBeUnique
 
         if ($status !== 0) {
             $this->handleError($log);
-
             return;
         }
 
