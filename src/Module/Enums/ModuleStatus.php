@@ -12,13 +12,7 @@ enum ModuleStatus: string
 
     case InstallPending = 'nox::admin.notifications.modules.install.pending.body';
 
-    case InstallSuccess = 'nox::admin.notifications.modules.install.success.body';
-
     case AlreadyInstalled = 'nox::admin.notifications.modules.already_installed';
 
     case DeletePending = 'nox::admin.notifications.modules.delete.pending.body';
-
-    case DeleteSuccess = 'nox::admin.notifications.modules.delete.success.body';
-
-    case DeleteFailed = 'nox::admin.notifications.modules.delete.failed.body';
 }
