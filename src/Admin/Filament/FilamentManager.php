@@ -79,7 +79,7 @@ class FilamentManager extends FilamentManagerBase
                         'name' => Str::of($resource)
                             ->replace('\\', '//')
                             ->toString(),
-                        'label' => $resource::getNavigationLabel(),
+                        'label' => is_callable([$resource, 'getNavigationLabel']) ? $resource::getNavigationLabel() : null,
                         'model' => $resource::getModel(),
                         'abilities' => $abilities
                     ],
