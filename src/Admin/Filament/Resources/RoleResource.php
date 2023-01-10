@@ -30,6 +30,39 @@ class RoleResource extends Resource
         return __('nox::admin.resources.role.label');
     }
 
+    public static function can(string $action, ?Model $record = null): bool
+    {
+        $user = auth()->user();
+
+        if($record === null || $user->can('*')) {
+            return parent::can($action, $record);
+        }
+
+        if($record->can('*')) {
+            return false;
+        }
+
+        return parent::can($action, $record);
+    }
+
+    public static function canDelete(Model $record): bool
+    {
+        if($record->name === 'superadmin' || $record->name === 'user') {
+            return false;
+        }
+
+        return parent::canDelete($record);
+    }
+
+    public static function canForceDelete(Model $record): bool
+    {
+        if($record->name === 'superadmin' || $record->name === 'user') {
+            return false;
+        }
+
+        return parent::canForceDelete($record);
+    }
+
     public static function form(Form $form): Form
     {
         return $form
