@@ -31,6 +31,8 @@ class SeedNoxDefaults extends Command
 
         BouncerFacade::forbidEveryone()->to('delete', Role::find(1));
         BouncerFacade::forbidEveryone()->to('delete', Role::find(3));
+
+        BouncerFacade::refresh();
     }
 
     protected function createSuperAdminRole(): void

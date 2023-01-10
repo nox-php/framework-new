@@ -21,10 +21,14 @@ use Nox\Framework\Admin\Filament\Resources\ThemeResource;
 use Nox\Framework\Admin\Filament\Resources\UserResource;
 use Nox\Framework\Admin\Http\Livewire\LocaleSwitcher;
 use Nox\Framework\Admin\Policies\ActivityPolicy;
+use Nox\Framework\Admin\Policies\ModulePolicy;
 use Nox\Framework\Admin\Policies\RolePolicy;
+use Nox\Framework\Admin\Policies\ThemePolicy;
 use Nox\Framework\Admin\Policies\UserPolicy;
 use Nox\Framework\Auth\Models\User;
+use Nox\Framework\Module\Models\Module;
 use Nox\Framework\Nox;
+use Nox\Framework\Theme\Models\Theme;
 use Silber\Bouncer\Database\Role;
 use Spatie\Activitylog\Models\Activity;
 use Spatie\Health\Checks\Checks\CacheCheck;
@@ -109,6 +113,8 @@ class AdminServiceProvider extends PluginServiceProvider
         Gate::policy(User::class, UserPolicy::class);
         Gate::policy(Role::class, RolePolicy::class);
         Gate::policy(Activity::class, ActivityPolicy::class);
+        Gate::policy(Module::class, ModulePolicy::class);
+        Gate::policy(Theme::class, ThemePolicy::class);
 
         Health::checks([
             DebugModeCheck::new(),
