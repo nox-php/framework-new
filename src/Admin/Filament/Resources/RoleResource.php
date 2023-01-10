@@ -173,7 +173,7 @@ class RoleResource extends Resource
 
     protected static function getPagesForm(): array
     {
-        $pages = Filament::getPages();
+        $pages = Filament::getPageAbilities();
 
         if (empty($pages)) {
             return [
@@ -185,7 +185,7 @@ class RoleResource extends Resource
             ];
         }
 
-        return static::getEntityForm(Filament::getPages());
+        return static::getEntityForm($pages);
     }
 
     protected static function getCustomForm(): array
@@ -290,7 +290,7 @@ class RoleResource extends Resource
 
     protected static function enableAllAbilities(Closure $set): void
     {
-        $resources = Filament::getResources();
+        $resources = Filament::getResourceAbilities();
         collect($resources)
             ->each(static function (array $data) use ($set) {
                 $set($data['name'], true);
@@ -299,7 +299,7 @@ class RoleResource extends Resource
                     ->each(static fn(string $ability) => $set($ability . '//' . $data['name'], true));
             });
 
-        $pages = Filament::getPages();
+        $pages = Filament::getPageAbilities();
         collect($pages)
             ->each(static function (array $data) use ($set) {
                 $set($data['name'], true);

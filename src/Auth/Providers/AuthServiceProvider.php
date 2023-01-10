@@ -2,6 +2,7 @@
 
 namespace Nox\Framework\Auth\Providers;
 
+use Filament\Facades\Filament;
 use Filament\Http\Responses\Auth\Contracts\LoginResponse as LoginResponseContract;
 use Filament\Http\Responses\Auth\Contracts\LogoutResponse as LogoutResponseContract;
 use Illuminate\Support\Facades\Event;
@@ -33,6 +34,8 @@ class AuthServiceProvider extends ServiceProvider
         }
 
         BouncerFacade::runBeforePolicies();
+
+        Filament::registerCustomAbilities('view_admin');
     }
 
     public function provides(): array
