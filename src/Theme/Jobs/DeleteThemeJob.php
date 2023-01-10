@@ -24,18 +24,17 @@ class DeleteThemeJob implements ShouldQueue, ShouldBeUnique
     public function __construct(
         private string $name,
         private User $user
-    )
-    {
+    ) {
     }
 
     public function handle(ThemeRepository $themes, Composer $composer): void
     {
         rescue(
-            fn() => $this->delete($themes, $composer),
-            fn(Exception $e) => $this->handleError(activity()
+            fn () => $this->delete($themes, $composer),
+            fn (Exception $e) => $this->handleError(activity()
                 ->by($this->user)
                 ->event('nox.theme.delete')
-                ->log((string)$e))
+                ->log((string) $e))
         );
     }
 
@@ -51,6 +50,7 @@ class DeleteThemeJob implements ShouldQueue, ShouldBeUnique
 
         if ($status !== 0) {
             $this->handleError($log);
+
             return;
         }
 

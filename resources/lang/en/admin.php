@@ -15,7 +15,7 @@ return [
 
             'actions' => [
                 'browse' => 'Browse modules',
-                'go_back' => 'Go back'
+                'go_back' => 'Go back',
             ],
 
             'form' => [
@@ -37,14 +37,14 @@ return [
                 'filters' => [
                     'load_manifests' => [
                         'label' => 'Load Manifests (can slow down the table)',
-                        'indicator' => 'Manifests'
-                    ]
+                        'indicator' => 'Manifests',
+                    ],
                 ],
 
                 'actions' => [
                     'install' => 'Install',
-                    'view' => 'View'
-                ]
+                    'view' => 'View',
+                ],
             ],
         ],
 
@@ -54,7 +54,7 @@ return [
 
             'actions' => [
                 'browse' => 'Browse themes',
-                'go_back' => 'Go back'
+                'go_back' => 'Go back',
             ],
 
             'form' => [
@@ -76,16 +76,16 @@ return [
                 'filters' => [
                     'load_manifests' => [
                         'label' => 'Load Manifests (can slow down the table)',
-                        'indicator' => 'Manifests'
-                    ]
+                        'indicator' => 'Manifests',
+                    ],
                 ],
 
                 'actions' => [
                     'enable' => 'Enable',
                     'disable' => 'Disable',
                     'install' => 'Install',
-                    'view' => 'View'
-                ]
+                    'view' => 'View',
+                ],
             ],
         ],
 
@@ -151,7 +151,7 @@ return [
         'role' => [
             'navigation_label' => 'Roles',
             'label' => 'Role',
-        ]
+        ],
     ],
 
     'pages' => [

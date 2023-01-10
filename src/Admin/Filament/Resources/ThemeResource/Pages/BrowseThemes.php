@@ -30,8 +30,7 @@ class BrowseThemes extends ListRecords
     public function installTheme(
         ThemeRepository $themes,
         PackagistPackage $record
-    )
-    {
+    ) {
         if (
             ($status = $themes->install($record->name)) &&
             $status === ThemeStatus::InstallPending
@@ -68,13 +67,13 @@ class BrowseThemes extends ListRecords
 
         if (
             $response['total'] === 0 ||
-            !$this->isManifestLoadingEnabled()
+            ! $this->isManifestLoadingEnabled()
         ) {
             return $response;
         }
 
         $names = collect($response['results'])
-            ->filter(static fn(PackagistPackage $theme): bool => $theme['manifest'] === null)
+            ->filter(static fn (PackagistPackage $theme): bool => $theme['manifest'] === null)
             ->keys()
             ->all();
 
@@ -85,7 +84,7 @@ class BrowseThemes extends ListRecords
                 'manifest' => $manifest,
             ]);
 
-            Cache::set('packagist.manifest.' . $name, $manifest, now()->addDay());
+            Cache::set('packagist.manifest.'.$name, $manifest, now()->addDay());
         }
 
         return $response;
@@ -103,21 +102,21 @@ class BrowseThemes extends ListRecords
                 );
 
                 $response['results'] = collect($response['results'])
-                    ->filter(static fn(array $theme): bool => isset($theme['downloads']))
-                    ->mapWithKeys(static fn(array $theme): array => [
+                    ->filter(static fn (array $theme): bool => isset($theme['downloads']))
+                    ->mapWithKeys(static fn (array $theme): array => [
                         $theme['name'] => (new PackagistPackage())->forceFill([
                             'name' => $theme['name'],
                             'description' => $theme['description'],
                             'url' => $theme['url'],
                             'downloads' => $theme['downloads'],
-                            'manifest' => Cache::get('packagist.manifest.' . $theme['name']),
+                            'manifest' => Cache::get('packagist.manifest.'.$theme['name']),
                         ]),
                     ])
                     ->all();
 
                 return $response;
             },
-            static fn() => [
+            static fn () => [
                 'results' => [],
                 'total' => 0,
             ]
@@ -163,21 +162,21 @@ class BrowseThemes extends ListRecords
                     Tables\Columns\BadgeColumn::make('downloads')
                         ->color('success')
                         ->icon('heroicon-o-download')
-                        ->formatStateUsing(static fn(int $state): string => number_format($state)),
+                        ->formatStateUsing(static fn (int $state): string => number_format($state)),
                     Tables\Columns\TagsColumn::make('manifest.keywords')
-                        ->getStateUsing(static fn(PackagistPackage $record): array => $record->manifest === null
+                        ->getStateUsing(static fn (PackagistPackage $record): array => $record->manifest === null
                             ? []
                             : collect($record->manifest['keywords'])
-                                ->filter(static fn(string $tag): bool => !in_array($tag, static::$tagsBlacklist))
+                                ->filter(static fn (string $tag): bool => ! in_array($tag, static::$tagsBlacklist))
                                 ->all()
                         )
                         ->limit()
-                        ->hidden(fn() => !$this->isManifestLoadingEnabled()),
+                        ->hidden(fn () => ! $this->isManifestLoadingEnabled()),
                 ])->space(2),
                 Tables\Columns\TagsColumn::make('manifest.authors')
-                    ->getStateUsing(static fn(PackagistPackage $record): array => collect($record->manifest['authors'])->pluck('name')->all())
+                    ->getStateUsing(static fn (PackagistPackage $record): array => collect($record->manifest['authors'])->pluck('name')->all())
                     ->limit()
-                    ->hidden(fn() => !$this->isManifestLoadingEnabled()),
+                    ->hidden(fn () => ! $this->isManifestLoadingEnabled()),
             ]),
             Tables\Columns\Layout\Panel::make([
                 Tables\Columns\Layout\Stack::make([
@@ -185,12 +184,12 @@ class BrowseThemes extends ListRecords
                         Tables\Columns\BadgeColumn::make('manifest.version'),
                         Tables\Columns\TagsColumn::make('manifest.license'),
                         Tables\Columns\TextColumn::make('manifest.time')
-                            ->formatStateUsing(static fn(?string $state): string => 'Last updated ' . Carbon::parse($state)->diffForHumans()),
+                            ->formatStateUsing(static fn (?string $state): string => 'Last updated '.Carbon::parse($state)->diffForHumans()),
                     ]),
                 ])->space(),
             ])
                 ->collapsible()
-                ->hidden(fn() => !$this->isManifestLoadingEnabled()),
+                ->hidden(fn () => ! $this->isManifestLoadingEnabled()),
         ];
     }
 
@@ -207,7 +206,7 @@ class BrowseThemes extends ListRecords
                 Tables\Actions\Action::make('view-theme')
                     ->label(__('nox::admin.resources.theme.table.actions.view'))
                     ->icon('heroicon-o-external-link')
-                    ->url(static fn(PackagistPackage $record): string => $record->url)
+                    ->url(static fn (PackagistPackage $record): string => $record->url)
                     ->openUrlInNewTab(),
             ]),
         ];

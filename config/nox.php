@@ -35,8 +35,8 @@ return [
         ],
 
         'cache' => [
-            'enabled' => true
-        ]
+            'enabled' => true,
+        ],
     ],
 
     'admin' => [

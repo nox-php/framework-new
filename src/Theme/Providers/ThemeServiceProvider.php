@@ -20,8 +20,7 @@ class ThemeServiceProvider extends ServiceProvider
         if (Themes::enabled() !== null) {
             Themes::boot();
         } else {
-            $this->loadRoutesFrom(__DIR__ . '/../../../routes/landing.php');
+            $this->loadRoutesFrom(__DIR__.'/../../../routes/landing.php');
         }
     }
 }
-

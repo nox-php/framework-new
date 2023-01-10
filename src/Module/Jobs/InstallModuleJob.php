@@ -51,6 +51,7 @@ class InstallModuleJob implements ShouldQueue, ShouldBeUnique
 
         if ($status !== 0) {
             $this->handleError($log);
+
             return;
         }
 

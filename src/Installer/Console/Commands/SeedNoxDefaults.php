@@ -5,6 +5,7 @@ namespace Nox\Framework\Installer\Console\Commands;
 use Illuminate\Console\Command;
 use Nox\Framework\Auth\Models\User;
 use Silber\Bouncer\BouncerFacade;
+use Silber\Bouncer\Database\Role;
 
 class SeedNoxDefaults extends Command
 {
@@ -24,6 +25,9 @@ class SeedNoxDefaults extends Command
         $this->createSuperAdminRole();
         $this->createAdminRole();
         $this->createUserRole();
+
+        BouncerFacade::forbidEveryone()->to('delete', Role::find(1));
+        BouncerFacade::forbidEveryone()->to('delete', Role::find(3));
     }
 
     protected function createSuperAdminRole(): void
@@ -47,18 +51,31 @@ class SeedNoxDefaults extends Command
 
         BouncerFacade::allow($admin)->to('view_admin');
 
-        BouncerFacade::allow($admin)->to('view', User::class);
-        BouncerFacade::allow($admin)->to('view_any', User::class);
-        BouncerFacade::allow($admin)->to('create', User::class);
-        BouncerFacade::allow($admin)->to('update', User::class);
-        BouncerFacade::allow($admin)->to('restore', User::class);
-        BouncerFacade::allow($admin)->to('restore_any', User::class);
-        BouncerFacade::allow($admin)->to('replicate', User::class);
-        BouncerFacade::allow($admin)->to('reorder', User::class);
-        BouncerFacade::allow($admin)->to('delete', User::class);
-        BouncerFacade::allow($admin)->to('delete_any', User::class);
-        BouncerFacade::allow($admin)->to('force_delete', User::class);
-        BouncerFacade::allow($admin)->to('force_delete_any', User::class);
+        $abilities = [
+            'view',
+            'view_any',
+            'create',
+            'update',
+            'restore',
+            'restore_any',
+            'replicate',
+            'reorder',
+            'delete',
+            'delete_any',
+            'force_delete',
+            'force_delete_any',
+        ];
+
+        $models = [
+            User::class,
+            Role::class,
+        ];
+
+        foreach ($models as $model) {
+            foreach ($abilities as $ability) {
+                BouncerFacade::allow($admin)->to($ability, $model);
+            }
+        }
     }
 
     protected function createUserRole(): void

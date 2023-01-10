@@ -30,8 +30,7 @@ class BrowseModules extends ListRecords
     public function installModule(
         ModuleRepository $modules,
         PackagistPackage $record
-    )
-    {
+    ) {
         if (
             ($status = $modules->install($record->name)) &&
             $status === ModuleStatus::InstallPending
@@ -68,13 +67,13 @@ class BrowseModules extends ListRecords
 
         if (
             $response['total'] === 0 ||
-            !$this->isManifestLoadingEnabled()
+            ! $this->isManifestLoadingEnabled()
         ) {
             return $response;
         }
 
         $names = collect($response['results'])
-            ->filter(static fn(PackagistPackage $module): bool => $module['manifest'] === null)
+            ->filter(static fn (PackagistPackage $module): bool => $module['manifest'] === null)
             ->keys()
             ->all();
 
@@ -85,7 +84,7 @@ class BrowseModules extends ListRecords
                 'manifest' => $manifest,
             ]);
 
-            Cache::set('packagist.manifest.' . $name, $manifest, now()->addDay());
+            Cache::set('packagist.manifest.'.$name, $manifest, now()->addDay());
         }
 
         return $response;
@@ -103,21 +102,21 @@ class BrowseModules extends ListRecords
                 );
 
                 $response['results'] = collect($response['results'])
-                    ->filter(static fn(array $module): bool => isset($module['downloads']))
-                    ->mapWithKeys(static fn(array $module): array => [
+                    ->filter(static fn (array $module): bool => isset($module['downloads']))
+                    ->mapWithKeys(static fn (array $module): array => [
                         $module['name'] => (new PackagistPackage())->forceFill([
                             'name' => $module['name'],
                             'description' => $module['description'],
                             'url' => $module['url'],
                             'downloads' => $module['downloads'],
-                            'manifest' => Cache::get('packagist.manifest.' . $module['name']),
+                            'manifest' => Cache::get('packagist.manifest.'.$module['name']),
                         ]),
                     ])
                     ->all();
 
                 return $response;
             },
-            static fn() => [
+            static fn () => [
                 'results' => [],
                 'total' => 0,
             ]
@@ -163,21 +162,21 @@ class BrowseModules extends ListRecords
                     Tables\Columns\BadgeColumn::make('downloads')
                         ->color('success')
                         ->icon('heroicon-o-download')
-                        ->formatStateUsing(static fn(int $state): string => number_format($state)),
+                        ->formatStateUsing(static fn (int $state): string => number_format($state)),
                     Tables\Columns\TagsColumn::make('manifest.keywords')
-                        ->getStateUsing(static fn(PackagistPackage $record): array => $record->manifest === null
+                        ->getStateUsing(static fn (PackagistPackage $record): array => $record->manifest === null
                             ? []
                             : collect($record->manifest['keywords'])
-                                ->filter(static fn(string $tag): bool => !in_array($tag, static::$tagsBlacklist))
+                                ->filter(static fn (string $tag): bool => ! in_array($tag, static::$tagsBlacklist))
                                 ->all()
                         )
                         ->limit()
-                        ->hidden(fn() => !$this->isManifestLoadingEnabled()),
+                        ->hidden(fn () => ! $this->isManifestLoadingEnabled()),
                 ])->space(2),
                 Tables\Columns\TagsColumn::make('manifest.authors')
-                    ->getStateUsing(static fn(PackagistPackage $record): array => collect($record->manifest['authors'])->pluck('name')->all())
+                    ->getStateUsing(static fn (PackagistPackage $record): array => collect($record->manifest['authors'])->pluck('name')->all())
                     ->limit()
-                    ->hidden(fn() => !$this->isManifestLoadingEnabled()),
+                    ->hidden(fn () => ! $this->isManifestLoadingEnabled()),
             ]),
             Tables\Columns\Layout\Panel::make([
                 Tables\Columns\Layout\Stack::make([
@@ -185,12 +184,12 @@ class BrowseModules extends ListRecords
                         Tables\Columns\BadgeColumn::make('manifest.version'),
                         Tables\Columns\TagsColumn::make('manifest.license'),
                         Tables\Columns\TextColumn::make('manifest.time')
-                            ->formatStateUsing(static fn(?string $state): string => 'Last updated ' . Carbon::parse($state)->diffForHumans()),
+                            ->formatStateUsing(static fn (?string $state): string => 'Last updated '.Carbon::parse($state)->diffForHumans()),
                     ]),
                 ])->space(),
             ])
                 ->collapsible()
-                ->hidden(fn() => !$this->isManifestLoadingEnabled()),
+                ->hidden(fn () => ! $this->isManifestLoadingEnabled()),
         ];
     }
 
@@ -207,7 +206,7 @@ class BrowseModules extends ListRecords
                 Tables\Actions\Action::make('view-module')
                     ->label(__('nox::admin.resources.module.table.actions.view'))
                     ->icon('heroicon-o-external-link')
-                    ->url(static fn(PackagistPackage $record): string => $record->url)
+                    ->url(static fn (PackagistPackage $record): string => $record->url)
                     ->openUrlInNewTab(),
             ]),
         ];

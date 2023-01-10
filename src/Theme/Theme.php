@@ -88,7 +88,7 @@ class Theme implements Arrayable
             'pretty_version' => $this->prettyVersion,
             'path' => $this->path,
             'config' => $this->config,
-            'enabled' => $this->enabled
+            'enabled' => $this->enabled,
         ];
     }
 }

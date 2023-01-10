@@ -25,7 +25,7 @@ class FilamentManager extends FilamentManagerBase
             $isAString = is_string($aValue);
             $isBString = is_string($bValue);
 
-            if (!$isAString && !$isBString) {
+            if (! $isAString && ! $isBString) {
                 return $aValue - $bValue;
             }
 
@@ -33,7 +33,7 @@ class FilamentManager extends FilamentManagerBase
                 return strcasecmp($a, $b);
             }
 
-            if (!$isAString && $isBString) {
+            if (! $isAString && $isBString) {
                 return -1;
             }
 
@@ -41,7 +41,7 @@ class FilamentManager extends FilamentManagerBase
         });
 
         return $this->cachedNavigationGroups = collect($this->navigationGroups)
-            ->map(static fn($value, $key) => is_string($key) ? $key : $value)
+            ->map(static fn ($value, $key) => is_string($key) ? $key : $value)
             ->values()
             ->all();
     }
@@ -80,8 +80,8 @@ class FilamentManager extends FilamentManagerBase
                             ->replace('\\', '//')
                             ->toString(),
                         'abilities' => $abilities,
-                        'model' => $resource::getModel()
-                    ]
+                        'model' => $resource::getModel(),
+                    ],
                 ];
             })
             ->all();
@@ -107,11 +107,11 @@ class FilamentManager extends FilamentManagerBase
                         'name' => Str::of($page)
                             ->replace('\\', '//')
                             ->toString(),
-                        'abilities' => $abilities
-                    ]
+                        'abilities' => $abilities,
+                    ],
                 ];
             })
-            ->filter(static fn($data): bool => !empty($data['abilities']))
+            ->filter(static fn ($data): bool => ! empty($data['abilities']))
             ->all();
     }
 
@@ -122,8 +122,8 @@ class FilamentManager extends FilamentManagerBase
         $this->customAbilities = [
             ...$this->customAbilities,
             ...collect($abilities)
-                ->map(static fn(string $ability): string => Str::replace('.', '-', $ability))
-                ->all()
+                ->map(static fn (string $ability): string => Str::replace('.', '-', $ability))
+                ->all(),
         ];
     }
 }

@@ -18,7 +18,7 @@ class ModuleDiscovery
     protected function getNoxModules(array $packages): array
     {
         return collect($packages)
-            ->mapWithKeys(fn(string $package): array => [
+            ->mapWithKeys(fn (string $package): array => [
                 $package => $this->getPackageManifest($package),
             ])
             ->filter()
@@ -29,14 +29,14 @@ class ModuleDiscovery
     {
         $path = InstalledVersions::getInstallPath($package);
 
-        $manifestPath = $path . '/composer.json';
+        $manifestPath = $path.'/composer.json';
 
-        if (!File::exists($manifestPath)) {
+        if (! File::exists($manifestPath)) {
             return null;
         }
 
         $manifest = $this->loadManifest($manifestPath);
-        if ($manifest === null || !$this->isNoxModule($manifest)) {
+        if ($manifest === null || ! $this->isNoxModule($manifest)) {
             return null;
         }
 
@@ -68,7 +68,7 @@ class ModuleDiscovery
 
     protected function isNoxModule(array $manifest): bool
     {
-        if (!isset($manifest['keywords'])) {
+        if (! isset($manifest['keywords'])) {
             return false;
         }
 

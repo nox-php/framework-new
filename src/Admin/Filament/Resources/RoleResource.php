@@ -35,22 +35,22 @@ class RoleResource extends Resource
         return $form
             ->columns([
                 'sm' => 3,
-                'lg' => null
+                'lg' => null,
             ])
             ->schema([
                 Forms\Components\Card::make()
                     ->columns([
-                        'sm' => 2
+                        'sm' => 2,
                     ])
                     ->columnSpan([
-                        'sm' => 2
+                        'sm' => 2,
                     ])
                     ->schema([
                         Forms\Components\TextInput::make('name')
                             ->label('Name')
                             ->required()
                             ->maxLength(255)
-                            ->disabled(static fn(?Role $record): bool => $record !== null && ($record->name === 'superadmin' || $record->name === 'user')),
+                            ->disabled(static fn (?Role $record): bool => $record !== null && ($record->name === 'superadmin' || $record->name === 'user')),
                         Forms\Components\TextInput::make('title')
                             ->label('Title')
                             ->required()
@@ -59,10 +59,11 @@ class RoleResource extends Resource
                             ->label('Is Super Administrator')
                             ->helperText('Super Administrators have unrestricted access and can only be edited by other Super Administrators')
                             ->reactive()
-                            ->disabled(static fn(?Role $record): bool => $record !== null && $record->name === 'superadmin')
+                            ->disabled(static fn (?Role $record): bool => $record !== null && $record->name === 'superadmin')
                             ->afterStateHydrated(static function (Closure $set, ?Role $record) {
-                                if ($record === null || !$record->can('*')) {
+                                if ($record === null || ! $record->can('*')) {
                                     $set('is_super_admin', false);
+
                                     return;
                                 }
 
@@ -72,17 +73,17 @@ class RoleResource extends Resource
                                 if ($state) {
                                     static::enableAllAbilities($set);
                                 }
-                            })
+                            }),
                     ]),
                 Forms\Components\Card::make()
                     ->columnSpan(1)
                     ->schema([
                         Forms\Components\Placeholder::make('created_at')
                             ->label('Created at')
-                            ->content(fn($record): string => $record?->created_at?->diffForHumans() ?? '-'),
+                            ->content(fn ($record): string => $record?->created_at?->diffForHumans() ?? '-'),
                         Forms\Components\Placeholder::make('updated_at')
                             ->label('Updated at')
-                            ->content(fn($record): string => $record?->updated_at?->diffForHumans() ?? '-'),
+                            ->content(fn ($record): string => $record?->updated_at?->diffForHumans() ?? '-'),
                     ]),
                 Forms\Components\Tabs::make('Abilities')
                     ->disableLabel()
@@ -108,7 +109,7 @@ class RoleResource extends Resource
                                 'lg' => 3,
                             ])
                             ->schema(static::getCustomForm()),
-                    ])
+                    ]),
             ]);
     }
 
@@ -131,13 +132,13 @@ class RoleResource extends Resource
                     ->date(),
                 Tables\Columns\TextColumn::make('updated_at')
                     ->label('Updated at')
-                    ->date()
+                    ->date(),
             ])
             ->actions([
-                Tables\Actions\EditAction::make()
+                Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make()
+                Tables\Actions\DeleteBulkAction::make(),
             ]);
     }
 
@@ -164,7 +165,7 @@ class RoleResource extends Resource
                     ->disableLabel()
                     ->columnSpanFull()
                     ->extraAttributes(['class' => 'text-center'])
-                    ->content('No resources available')
+                    ->content('No resources available'),
             ];
         }
 
@@ -181,7 +182,7 @@ class RoleResource extends Resource
                     ->disableLabel()
                     ->columnSpanFull()
                     ->extraAttributes(['class' => 'text-center'])
-                    ->content('No pages available')
+                    ->content('No pages available'),
             ];
         }
 
@@ -195,8 +196,8 @@ class RoleResource extends Resource
                 $form[] = Forms\Components\Checkbox::make($ability)
                     ->label($ability)
                     ->inline()
-                    ->disabled(static fn(Closure $get): bool => $get('is_super_admin'))
-                    ->dehydrated(static fn(bool $state): bool => $state)
+                    ->disabled(static fn (Closure $get): bool => $get('is_super_admin'))
+                    ->dehydrated(static fn (bool $state): bool => $state)
                     ->afterStateHydrated(static function (Closure $set, Closure $get, ?Role $record) use ($ability) {
                         if ($record === null) {
                             return;
@@ -220,10 +221,10 @@ class RoleResource extends Resource
                     ->schema([
                         Forms\Components\Toggle::make($data['name'])
                             ->label(Str::headline($entity::getNavigationLabel()))
-                            ->helperText(new HtmlString('<span class="text-xs">' . $data['model'] ?? $entity . '</span>'))
+                            ->helperText(new HtmlString('<span class="text-xs">'.$data['model'] ?? $entity.'</span>'))
                             ->onIcon('heroicon-s-lock-open')
                             ->offIcon('heroicon-s-lock-closed')
-                            ->disabled(static fn(Closure $get): bool => $get('is_super_admin'))
+                            ->disabled(static fn (Closure $get): bool => $get('is_super_admin'))
                             ->reactive()
                             ->dehydrated(false)
                             ->afterStateHydrated(static function (Closure $set, ?Role $record) use ($data) {
@@ -233,7 +234,7 @@ class RoleResource extends Resource
 
                                 $success = true;
                                 foreach ($data['abilities'] as $ability) {
-                                    if (!$record->can($ability, $data['model'] ?? null)) {
+                                    if (! $record->can($ability, $data['model'] ?? null)) {
                                         $success = false;
                                     }
                                 }
@@ -244,14 +245,14 @@ class RoleResource extends Resource
                             })
                             ->afterStateUpdated(static function (Closure $set, Closure $get, bool $state) use ($data): void {
                                 collect($data['abilities'])
-                                    ->each(static fn(string $ability) => $set($ability . '//' . $data['name'], $state));
+                                    ->each(static fn (string $ability) => $set($ability.'//'.$data['name'], $state));
                             }),
 
                         Forms\Components\Fieldset::make('Abilities')
                             ->extraAttributes(['class' => 'text-primary-600', 'style' => 'border-color:var(--primary)'])
                             ->columns(2)
                             ->columnSpan(1)
-                            ->schema(static::getAbilitiesForm($entity, $data))
+                            ->schema(static::getAbilitiesForm($entity, $data)),
                     ]);
 
                 return $form;
@@ -262,24 +263,24 @@ class RoleResource extends Resource
     {
         return collect($data['abilities'])
             ->reduce(static function ($form, $ability) use ($data) {
-                $form[] = Forms\Components\Checkbox::make($ability . '//' . $data['name'])
+                $form[] = Forms\Components\Checkbox::make($ability.'//'.$data['name'])
                     ->label(Str::headline($ability))
                     ->extraAttributes(['class' => 'text-primary-600'])
                     ->reactive()
-                    ->disabled(static fn(Closure $get): bool => $get('is_super_admin'))
-                    ->dehydrated(static fn(bool $state): bool => $state)
+                    ->disabled(static fn (Closure $get): bool => $get('is_super_admin'))
+                    ->dehydrated(static fn (bool $state): bool => $state)
                     ->afterStateHydrated(static function (Closure $set, Closure $get, ?Role $record) use ($ability, $data): void {
                         if ($record === null) {
                             return;
                         }
 
                         $set(
-                            $ability . '//' . $data['name'],
+                            $ability.'//'.$data['name'],
                             $record->can($ability, $data['model'] ?? null)
                         );
                     })
                     ->afterStateUpdated(static function (Closure $set, Closure $get, bool $state) use ($data): void {
-                        if (!$state) {
+                        if (! $state) {
                             $set($data['name'], false);
                         }
                     });
@@ -296,7 +297,7 @@ class RoleResource extends Resource
                 $set($data['name'], true);
 
                 collect($data['abilities'])
-                    ->each(static fn(string $ability) => $set($ability . '//' . $data['name'], true));
+                    ->each(static fn (string $ability) => $set($ability.'//'.$data['name'], true));
             });
 
         $pages = Filament::getPageAbilities();
@@ -305,19 +306,19 @@ class RoleResource extends Resource
                 $set($data['name'], true);
 
                 collect($data['abilities'])
-                    ->each(static fn(string $ability) => $set($ability . '//' . $data['name'], true));
+                    ->each(static fn (string $ability) => $set($ability.'//'.$data['name'], true));
             });
 
         $customAbilities = Filament::getCustomAbilities();
         collect($customAbilities)
-            ->each(static fn(string $ability) => $set($ability, true));
+            ->each(static fn (string $ability) => $set($ability, true));
     }
 
     public static function getGloballySearchableAttributes(): array
     {
         return [
             'name',
-            'title'
+            'title',
         ];
     }
 
@@ -329,7 +330,7 @@ class RoleResource extends Resource
     public static function getGlobalSearchResultDetails(Model $record): array
     {
         return [
-            'Name' => $record->name
+            'Name' => $record->name,
         ];
     }
 

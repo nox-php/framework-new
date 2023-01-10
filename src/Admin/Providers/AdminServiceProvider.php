@@ -38,7 +38,7 @@ class AdminServiceProvider extends PluginServiceProvider
         UserResource::class,
         RoleResource::class,
         ModuleResource::class,
-        ThemeResource::class
+        ThemeResource::class,
     ];
 
     protected array $pages = [

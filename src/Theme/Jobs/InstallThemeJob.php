@@ -26,18 +26,17 @@ class InstallThemeJob implements ShouldQueue, ShouldBeUnique
     public function __construct(
         private string $name,
         private User $user
-    )
-    {
+    ) {
     }
 
     public function handle(ThemeRepository $themes, Composer $composer): void
     {
         rescue(
-            fn() => $this->install($themes, $composer),
-            fn(Exception $e) => $this->handleError(activity()
+            fn () => $this->install($themes, $composer),
+            fn (Exception $e) => $this->handleError(activity()
                 ->by($this->user)
                 ->event('nox.theme.install')
-                ->log((string)$e))
+                ->log((string) $e))
         );
     }
 
@@ -53,6 +52,7 @@ class InstallThemeJob implements ShouldQueue, ShouldBeUnique
 
         if ($status !== 0) {
             $this->handleError($log);
+
             return;
         }
 
@@ -115,7 +115,7 @@ class InstallThemeJob implements ShouldQueue, ShouldBeUnique
                 'extra.laravel.dont-discover',
                 [
                     ...Arr::get($data, 'extra.laravel.dont-discover', []),
-                    $this->name
+                    $this->name,
                 ]
             );
 

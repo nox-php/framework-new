@@ -4,7 +4,6 @@ namespace Nox\Framework\Theme\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
-use Nox\Framework\Module\Facades\Modules;
 use Nox\Framework\Theme\Facades\Themes;
 use Sushi\Sushi;
 
@@ -24,7 +23,7 @@ class Theme extends Model
             'description' => 'string',
             'version' => 'string',
             'pretty_version' => 'string',
-            'enabled' => 'boolean'
+            'enabled' => 'boolean',
         ];
     }
 
@@ -45,7 +44,7 @@ class Theme extends Model
                 'version' => $theme->version(),
                 'pretty_version' => $theme->prettyVersion(),
                 'path' => $theme->path(),
-                'enabled' => $theme->enabled()
+                'enabled' => $theme->enabled(),
             ])
             ->values()
             ->all();
