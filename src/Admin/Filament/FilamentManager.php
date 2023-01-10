@@ -79,8 +79,9 @@ class FilamentManager extends FilamentManagerBase
                         'name' => Str::of($resource)
                             ->replace('\\', '//')
                             ->toString(),
-                        'abilities' => $abilities,
+                        'label' => $resource::getNavigationLabel(),
                         'model' => $resource::getModel(),
+                        'abilities' => $abilities
                     ],
                 ];
             })
@@ -107,6 +108,8 @@ class FilamentManager extends FilamentManagerBase
                         'name' => Str::of($page)
                             ->replace('\\', '//')
                             ->toString(),
+                        'label' => is_callable([$page, 'getNavigationLabel']) ? $page::getNavigationLabel() : null,
+                        'model' => is_callable([$page, 'getModel']) ? $page::getModel() : null,
                         'abilities' => $abilities,
                     ],
                 ];

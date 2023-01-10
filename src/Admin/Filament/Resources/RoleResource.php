@@ -253,7 +253,7 @@ class RoleResource extends Resource
                     ->extraAttributes(['class' => 'border-0 shadow-lg'])
                     ->schema([
                         Forms\Components\Toggle::make($data['name'])
-                            ->label(Str::headline($entity::getNavigationLabel()))
+                            ->label(Str::headline($data['label'] ?? $data['name']))
                             ->helperText(new HtmlString('<span class="text-xs">'.$data['model'] ?? $entity.'</span>'))
                             ->onIcon('heroicon-s-lock-open')
                             ->offIcon('heroicon-s-lock-closed')
