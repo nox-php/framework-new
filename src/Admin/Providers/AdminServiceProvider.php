@@ -8,6 +8,7 @@ use Filament\Facades\Filament;
 use Filament\PluginServiceProvider;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\Gate;
 use Livewire\Livewire;
 use Nox\Framework\Admin\Filament\AvatarProvider\AvatarProvider;
 use Nox\Framework\Admin\Filament\FilamentManager;
@@ -19,7 +20,13 @@ use Nox\Framework\Admin\Filament\Resources\RoleResource;
 use Nox\Framework\Admin\Filament\Resources\ThemeResource;
 use Nox\Framework\Admin\Filament\Resources\UserResource;
 use Nox\Framework\Admin\Http\Livewire\LocaleSwitcher;
+use Nox\Framework\Admin\Policies\ActivityPolicy;
+use Nox\Framework\Admin\Policies\RolePolicy;
+use Nox\Framework\Admin\Policies\UserPolicy;
+use Nox\Framework\Auth\Models\User;
 use Nox\Framework\Nox;
+use Silber\Bouncer\Database\Role;
+use Spatie\Activitylog\Models\Activity;
 use Spatie\Health\Checks\Checks\CacheCheck;
 use Spatie\Health\Checks\Checks\DebugModeCheck;
 use Spatie\Health\Checks\Checks\EnvironmentCheck;
@@ -98,6 +105,10 @@ class AdminServiceProvider extends PluginServiceProvider
         parent::packageBooted();
 
         $this->loadRoutesFrom(__DIR__.'/../../../routes/admin.php');
+
+        Gate::policy(User::class, UserPolicy::class);
+        Gate::policy(Role::class, RolePolicy::class);
+        Gate::policy(Activity::class, ActivityPolicy::class);
 
         Health::checks([
             DebugModeCheck::new(),
