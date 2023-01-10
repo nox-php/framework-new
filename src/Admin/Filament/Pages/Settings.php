@@ -32,7 +32,7 @@ class Settings extends Page implements HasCustomAbilities
 
     public ?string $availableUpdateVersion = null;
 
-    protected static function getNavigationLabel(): string
+    public static function getNavigationLabel(): string
     {
         return __('nox::admin.pages.settings.label');
     }
