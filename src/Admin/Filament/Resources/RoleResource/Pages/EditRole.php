@@ -53,7 +53,11 @@ class EditRole extends EditRecord
                 ->replace('//', '\\')
                 ->toString();
 
-            BouncerFacade::allow($this->record)->to($name, $resource::getModel());
+            rescue(
+                fn() => BouncerFacade::allow($this->record)->to($name, $resource::getModel()),
+                fn() => BouncerFacade::allow($this->record)->to($name),
+                false
+            );
         });
 
         BouncerFacade::refresh();
