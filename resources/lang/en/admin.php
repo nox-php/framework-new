@@ -147,6 +147,11 @@ return [
                 ],
             ],
         ],
+
+        'role' => [
+            'navigation_label' => 'Roles',
+            'label' => 'Role',
+        ]
     ],
 
     'pages' => [

@@ -116,29 +116,29 @@ class RoleResource extends Resource
     {
         return $table
             ->columns([
-                    Tables\Columns\BadgeColumn::make('title')
-                        ->label('Title')
-                        ->colors(['primary'])
-                        ->searchable(),
-                    Tables\Columns\BadgeColumn::make('name')
-                        ->label('Name'),
-                    Tables\Columns\BadgeColumn::make('abilities_count')
-                        ->label('Abilities')
-                        ->counts('abilities')
-                        ->colors(['success']),
-                    Tables\Columns\TextColumn::make('created_at')
-                        ->label('Created at')
-                        ->date(),
-                    Tables\Columns\TextColumn::make('updated_at')
-                        ->label('Updated at')
-                        ->date()
-                ])
-            ->actions(
+                Tables\Columns\BadgeColumn::make('title')
+                    ->label('Title')
+                    ->colors(['primary'])
+                    ->searchable(),
+                Tables\Columns\BadgeColumn::make('name')
+                    ->label('Name'),
+                Tables\Columns\BadgeColumn::make('abilities_count')
+                    ->label('Abilities')
+                    ->counts('abilities')
+                    ->colors(['success']),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->label('Created at')
+                    ->date(),
+                Tables\Columns\TextColumn::make('updated_at')
+                    ->label('Updated at')
+                    ->date()
+            ])
+            ->actions([
                 Tables\Actions\EditAction::make()
-            )
-            ->bulkActions(
+            ])
+            ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make()
-            );
+            ]);
     }
 
     public static function getPages(): array
