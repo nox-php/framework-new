@@ -27,7 +27,7 @@ class Health extends Page implements HasCustomAbilities
 
     public array $iconColors = [];
 
-    protected static function getNavigationLabel(): string
+    public static function getNavigationLabel(): string
     {
         return __('nox::admin.pages.health.label');
     }
