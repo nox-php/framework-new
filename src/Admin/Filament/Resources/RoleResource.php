@@ -277,8 +277,9 @@ class RoleResource extends Resource
                                 }
                             })
                             ->afterStateUpdated(static function (Closure $set, Closure $get, bool $state) use ($data): void {
-                                collect($data['abilities'])
-                                    ->each(static fn (string $ability) => $set($ability.'//'.$data['name'], $state));
+                                foreach($data['abilities'] as $ability) {
+                                    $set($ability.'//'.$data['name'], $state);
+                                }
                             }),
 
                         Forms\Components\Fieldset::make('Abilities')

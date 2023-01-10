@@ -4,8 +4,11 @@ namespace Nox\Framework\Installer\Console\Commands;
 
 use Illuminate\Console\Command;
 use Nox\Framework\Auth\Models\User;
+use Nox\Framework\Module\Models\Module;
+use Nox\Framework\Theme\Models\Theme;
 use Silber\Bouncer\BouncerFacade;
 use Silber\Bouncer\Database\Role;
+use Spatie\Activitylog\Models\Activity;
 
 class SeedNoxDefaults extends Command
 {
@@ -69,6 +72,9 @@ class SeedNoxDefaults extends Command
         $models = [
             User::class,
             Role::class,
+            Activity::class,
+            Module::class,
+            Theme::class
         ];
 
         foreach ($models as $model) {
