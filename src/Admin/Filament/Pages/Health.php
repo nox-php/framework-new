@@ -115,7 +115,7 @@ class Health extends Page implements HasCustomAbilities
         return auth()->user()->can('view_system_health');
     }
 
-    public function getCustomAbilities(): array
+    public static function getCustomAbilities(): array
     {
         return [
             'view_system_health'

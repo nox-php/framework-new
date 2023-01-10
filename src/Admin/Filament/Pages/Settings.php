@@ -17,11 +17,12 @@ use Filament\Pages\Page;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Nox\Framework\Admin\Contracts\HasCustomAbilities;
 use Nox\Framework\Support\Env;
 use Nox\Framework\Updater\Jobs\NoxCheckUpdateJob;
 use Nox\Framework\Updater\Jobs\NoxUpdateJob;
 
-class Settings extends Page
+class Settings extends Page implements HasCustomAbilities
 {
     protected static string $view = 'nox::filament.pages.settings';
 
@@ -430,6 +431,13 @@ class Settings extends Page
     protected static function shouldRegisterNavigation(): bool
     {
         return auth()->user()->can('view_settings');
+    }
+
+    public static function getCustomAbilities(): array
+    {
+        return [
+            'view_settings'
+        ];
     }
 
     protected static function getNavigationBadge(): ?string
