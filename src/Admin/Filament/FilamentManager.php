@@ -122,7 +122,7 @@ class FilamentManager extends FilamentManagerBase
         $this->customAbilities = [
             ...$this->customAbilities,
             ...collect($abilities)
-                ->map(static fn(string $ability): string => Str::replace('.', '-', $abilities))
+                ->map(static fn(string $ability): string => Str::replace('.', '-', $ability))
                 ->all()
         ];
     }
