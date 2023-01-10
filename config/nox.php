@@ -33,6 +33,10 @@ return [
                 'callback' => env('NOX_AUTH_DISCORD_CALLBACK_ROUTE', '/login/discord'),
             ],
         ],
+
+        'cache' => [
+            'enabled' => true
+        ]
     ],
 
     'admin' => [

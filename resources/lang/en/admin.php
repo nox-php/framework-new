@@ -4,6 +4,7 @@ return [
     'groups' => [
         'appearance' => 'Appearance',
         'extend' => 'Extend',
+        'auth' => 'Auth',
         'system' => 'System',
     ],
 

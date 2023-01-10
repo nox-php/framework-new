@@ -15,6 +15,7 @@ use Nox\Framework\Admin\Filament\Pages\Health as HealthPage;
 use Nox\Framework\Admin\Filament\Pages\Settings;
 use Nox\Framework\Admin\Filament\Resources\ActivityResource;
 use Nox\Framework\Admin\Filament\Resources\ModuleResource;
+use Nox\Framework\Admin\Filament\Resources\RoleResource;
 use Nox\Framework\Admin\Filament\Resources\ThemeResource;
 use Nox\Framework\Admin\Filament\Resources\UserResource;
 use Nox\Framework\Admin\Http\Livewire\LocaleSwitcher;
@@ -35,6 +36,7 @@ class AdminServiceProvider extends PluginServiceProvider
     protected array $resources = [
         ActivityResource::class,
         UserResource::class,
+        RoleResource::class,
         ModuleResource::class,
         ThemeResource::class
     ];
@@ -61,7 +63,8 @@ class AdminServiceProvider extends PluginServiceProvider
                 Filament::registerNavigationGroups([
                     __('nox::admin.groups.appearance') => 1,
                     __('nox::admin.groups.extend') => 50,
-                    __('nox::admin.groups.system') => 100,
+                    __('nox::admin.groups.auth') => 100,
+                    __('nox::admin.groups.system') => 150,
                 ]);
 
                 Filament::registerRenderHook(
