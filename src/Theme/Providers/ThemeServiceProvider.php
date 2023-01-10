@@ -17,7 +17,11 @@ class ThemeServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        Themes::boot();
+        if (Themes::enabledTheme() !== null) {
+            Themes::boot();
+        } else {
+            $this->loadRoutesFrom(__DIR__ . '/../../../routes/landing.php');
+        }
     }
 }
 
