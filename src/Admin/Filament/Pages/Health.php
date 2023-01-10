@@ -6,11 +6,12 @@ use Carbon\Carbon;
 use Filament\Pages\Actions\Action;
 use Filament\Pages\Page;
 use Illuminate\Support\Facades\Artisan;
+use Nox\Framework\Admin\Contracts\HasCustomAbilities;
 use Spatie\Health\Commands\RunHealthChecksCommand;
 use Spatie\Health\Enums\Status;
 use Spatie\Health\ResultStores\ResultStore;
 
-class Health extends Page
+class Health extends Page implements HasCustomAbilities
 {
     protected static string $view = 'nox::filament.pages.health';
 
@@ -43,6 +44,8 @@ class Health extends Page
 
     public function mount(): void
     {
+        abort_unless(static::shouldRegisterNavigation(), 401);
+
         Artisan::call(RunHealthChecksCommand::class);
 
         $this->backgroundColors = [
@@ -105,6 +108,18 @@ class Health extends Page
     public function getIconColor(string $status): ?string
     {
         return $this->iconColors[$status] ?? null;
+    }
+
+    protected static function shouldRegisterNavigation(): bool
+    {
+        return auth()->user()->can('view_system_health');
+    }
+
+    public function getCustomAbilities(): array
+    {
+        return [
+            'view_system_health'
+        ];
     }
 
     protected function getViewData(): array

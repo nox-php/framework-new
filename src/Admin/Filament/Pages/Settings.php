@@ -48,6 +48,8 @@ class Settings extends Page
 
     public function mount(): void
     {
+        abort_unless(static::shouldRegisterNavigation(), 401);
+
         $databaseConfig = collect(config('database.connections.'.config('database.default'), []))
             ->only([
                 'driver',
@@ -423,6 +425,11 @@ class Settings extends Page
                         ]),
                 ]),
         ];
+    }
+
+    protected static function shouldRegisterNavigation(): bool
+    {
+        return auth()->user()->can('view_settings');
     }
 
     protected static function getNavigationBadge(): ?string
