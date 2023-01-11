@@ -17,27 +17,27 @@ class ListThemes extends ListRecords
 {
     protected static string $resource = ThemeResource::class;
 
-    public function checkThemeUpdates(): void
+    public function checkThemeUpdates(ThemeRepository $themes): void
     {
         CheckPackagistUpdatesJob::dispatch([
-            'themes' => Themes::all()
+            'themes' => $themes->all()
         ]);
+
+        Notification::make()
+            ->success()
+            ->title(__('admin.notifications.themes.update.check.title'))
+            ->title(__('admin.notifications.themes.update.check.body'))
+            ->send();
     }
 
-    public function bulkUpdateThemes(
-        ThemeRepository $themes,
-        Collection $records
-    )
+    public function bulkUpdateThemes(ThemeRepository $themes, Collection $records): void
     {
         foreach ($records as $record) {
             $this->updateTheme($themes, $record);
         }
     }
 
-    public function updateTheme(
-        ThemeRepository $themes,
-        Theme $record
-    )
+    public function updateTheme(ThemeRepository $themes, Theme $record): void
     {
         if (
             ($status = $themes->update($record->name)) &&
@@ -57,10 +57,7 @@ class ListThemes extends ListRecords
         }
     }
 
-    public function enableTheme(
-        ThemeRepository $themes,
-        Theme $record
-    )
+    public function enableTheme(ThemeRepository $themes, Theme $record): void
     {
         if (
             ($status = $themes->enable($record->name)) &&
@@ -80,10 +77,7 @@ class ListThemes extends ListRecords
         }
     }
 
-    public function disableTheme(
-        ThemeRepository $themes,
-        Theme $record
-    )
+    public function disableTheme(ThemeRepository $themes, Theme $record): void
     {
         if (
             ($status = $themes->disable()) &&
@@ -103,20 +97,14 @@ class ListThemes extends ListRecords
         }
     }
 
-    public function bulkDeleteThemes(
-        ThemeRepository $themes,
-        Collection $records
-    )
+    public function bulkDeleteThemes(ThemeRepository $themes, Collection $records): void
     {
         foreach ($records as $record) {
             $this->deleteTheme($themes, $record);
         }
     }
 
-    public function deleteTheme(
-        ThemeRepository $themes,
-        Theme $record
-    )
+    public function deleteTheme(ThemeRepository $themes, Theme $record): void
     {
         if (
             ($status = $themes->delete($record->name)) &&
@@ -141,7 +129,9 @@ class ListThemes extends ListRecords
         return [
             Action::make('check-theme-updates')
                 ->label(__('nox::admin.resources.theme.actions.check_updates'))
-                ->action('checkThemeUpdates'),
+                ->action('checkThemeUpdates')
+                ->color('success')
+                ->requiresConfirmation(),
             Action::make('browse-themes')
                 ->label(__('nox::admin.resources.theme.actions.browse'))
                 ->url(ThemeResource::getUrl('browse')),
