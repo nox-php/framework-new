@@ -55,7 +55,7 @@ return [
             'actions' => [
                 'browse' => 'Browse themes',
                 'go_back' => 'Go back',
-                'check_updates' => 'Check for updates'
+                'check_updates' => 'Check for updates',
             ],
 
             'form' => [
@@ -92,8 +92,8 @@ return [
                 ],
 
                 'bulk_actions' => [
-                    'update' => 'Update selected'
-                ]
+                    'update' => 'Update selected',
+                ],
             ],
         ],
 
@@ -386,7 +386,7 @@ return [
             'update' => [
                 'check' => [
                     'title' => 'Checking for theme updates',
-                    'body' => 'You will be notified if there are any updates available'
+                    'body' => 'You will be notified if there are any updates available',
                 ],
 
                 'pending' => [

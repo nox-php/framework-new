@@ -10,8 +10,9 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
-use Nox\Framework\Support\Composer;
+use Nox\Framework\Module\Facades\Modules;
 use Nox\Framework\Support\Packagist;
+use Nox\Framework\Theme\Facades\Themes;
 
 class CheckPackagistUpdatesJob implements ShouldQueue
 {
@@ -19,10 +20,9 @@ class CheckPackagistUpdatesJob implements ShouldQueue
 
     public function __construct(
         private array $packages
-    )
-    {
+    ) {
         $this->packages = collect($this->packages)
-            ->map(static fn(array|string $package): array => is_array($package) ? $package : [$package])
+            ->map(static fn (array|string $package): array => is_array($package) ? $package : [$package])
             ->all();
     }
 
@@ -30,8 +30,8 @@ class CheckPackagistUpdatesJob implements ShouldQueue
     {
         $packageNames = Arr::flatten($this->packages);
         $currentVersions = collect($packageNames)
-            ->mapWithKeys(static fn(string $packageName): array => [
-                $packageName => InstalledVersions::getVersion($packageName)
+            ->mapWithKeys(static fn (string $packageName): array => [
+                $packageName => InstalledVersions::getVersion($packageName),
             ])
             ->all();
 
@@ -42,6 +42,8 @@ class CheckPackagistUpdatesJob implements ShouldQueue
 
             $this->updateCache($type, $versions);
         }
+
+        $this->clearCache();
     }
 
     private function getOutdatedPackages(array $packages, array $manifests, array $currentVersions): array
@@ -49,7 +51,7 @@ class CheckPackagistUpdatesJob implements ShouldQueue
         $versions = [];
 
         foreach ($packages as $package) {
-            if (!$manifest = $manifests[$package] ?? null) {
+            if (! $manifest = $manifests[$package] ?? null) {
                 continue;
             }
 
@@ -63,7 +65,7 @@ class CheckPackagistUpdatesJob implements ShouldQueue
 
     private function updateCache(string $type, array $versions): void
     {
-        $cacheKey = 'nox.' . $type . '.updates';
+        $cacheKey = 'nox.'.$type.'.updates';
 
         Cache::forever(
             $cacheKey,
@@ -71,5 +73,16 @@ class CheckPackagistUpdatesJob implements ShouldQueue
                 ->merge($versions)
                 ->all()
         );
+    }
+
+    private function clearCache(): void
+    {
+        if (! empty($this->packages['themes'])) {
+            Themes::clear();
+        }
+
+        if (! empty($this->packages['modules'])) {
+            Modules::clear();
+        }
     }
 }

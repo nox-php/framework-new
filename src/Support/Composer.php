@@ -14,7 +14,7 @@ class Composer
 
     public function __construct()
     {
-        putenv('COMPOSER_HOME=' . __DIR__ . '/vendor/bin/composer');
+        putenv('COMPOSER_HOME='.__DIR__.'/vendor/bin/composer');
     }
 
     public function require(string|array $packages): int
@@ -23,7 +23,7 @@ class Composer
 
         return $this->run('require', [
             'packages' => collect($packages)
-                ->map(static fn(string $package): string => $package . ':*')
+                ->map(static fn (string $package): string => $package.':*')
                 ->all(),
         ]);
     }
@@ -67,14 +67,14 @@ class Composer
 
     public function manifest(string $package): ?array
     {
-        $path = InstalledVersions::getInstallPath($package) . '/composer.json';
+        $path = InstalledVersions::getInstallPath($package).'/composer.json';
 
-        if (!File::exists($path)) {
+        if (! File::exists($path)) {
             return null;
         }
 
         return rescue(
-            static fn() => json_decode(File::get($path), true, 512, JSON_THROW_ON_ERROR),
+            static fn () => json_decode(File::get($path), true, 512, JSON_THROW_ON_ERROR),
             null,
             false
         );

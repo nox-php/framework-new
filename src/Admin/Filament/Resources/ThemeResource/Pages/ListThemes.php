@@ -20,9 +20,9 @@ class ListThemes extends ListRecords
     {
         CheckPackagistUpdatesJob::dispatch([
             'themes' => collect($themes->all())
-                ->map(static fn($theme) => $theme->name())
+                ->map(static fn ($theme) => $theme->name())
                 ->values()
-                ->all()
+                ->all(),
         ]);
 
         Notification::make()

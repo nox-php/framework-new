@@ -64,6 +64,7 @@ class NoxUpdateJob implements ShouldQueue, ShouldBeUnique
 
         if ($status !== 0) {
             $this->handleError($log, $currentVersion);
+
             return;
         }
 

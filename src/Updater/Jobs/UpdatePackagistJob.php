@@ -26,10 +26,9 @@ class UpdatePackagistJob implements ShouldQueue
     public function __construct(
         private array $packages,
         private User $user
-    )
-    {
+    ) {
         $this->packages = collect($this->packages)
-            ->map(static fn(array|string $package): array => is_array($package) ? $package : [$package])
+            ->map(static fn (array|string $package): array => is_array($package) ? $package : [$package])
             ->all();
     }
 
@@ -37,8 +36,8 @@ class UpdatePackagistJob implements ShouldQueue
     {
         $packageNames = Arr::flatten($this->packages);
         $currentVersions = collect($packageNames)
-            ->mapWithKeys(static fn(string $packageName): array => [
-                $packageName => InstalledVersions::getVersion($packageName)
+            ->mapWithKeys(static fn (string $packageName): array => [
+                $packageName => InstalledVersions::getVersion($packageName),
             ])
             ->all();
 
@@ -52,6 +51,7 @@ class UpdatePackagistJob implements ShouldQueue
 
         if ($statusCode !== 0) {
             $this->sendErrorNotification($activityLog);
+
             return;
         }
 
@@ -69,7 +69,7 @@ class UpdatePackagistJob implements ShouldQueue
     private function updatePackages(Composer $composer, array $packages): int
     {
         return rescue(
-            static fn(): int => $composer->update($packages),
+            static fn (): int => $composer->update($packages),
             1
         );
     }
@@ -81,8 +81,8 @@ class UpdatePackagistJob implements ShouldQueue
                 $this->user->notifyNow(
                     Notification::make()
                         ->success()
-                        ->title(__('nox::admin.notifications.' . $type . '.update.failed.title', ['name' => $package]))
-                        ->body(__('nox::admin.notifications.' . $type . '.update.failed.body'))
+                        ->title(__('nox::admin.notifications.'.$type.'.update.failed.title', ['name' => $package]))
+                        ->body(__('nox::admin.notifications.'.$type.'.update.failed.body'))
                         ->actions($this->getNotificationActions($type, $activityLog))
                         ->toDatabase()
                 );
@@ -95,7 +95,7 @@ class UpdatePackagistJob implements ShouldQueue
         return [
             Action::make('view-log')
                 ->button()
-                ->label(__('nox::admin.notifications.' . $type . '.update.actions.view_log'))
+                ->label(__('nox::admin.notifications.'.$type.'.update.actions.view_log'))
                 ->color('secondary')
                 ->url(ActivityResource::getUrl('view', ['record' => $activityLog?->id]), true)
                 ->hidden(static function () use ($activityLog) {
@@ -123,12 +123,12 @@ class UpdatePackagistJob implements ShouldQueue
     private function updateCaches(): void
     {
         foreach ($this->packages as $type => $packages) {
-            $cacheKey = 'nox.' . $type . '.updates';
+            $cacheKey = 'nox.'.$type.'.updates';
 
             Cache::forever(
                 $cacheKey,
                 collect(Cache::get($cacheKey, []))
-                    ->filter(static fn(string $version, $package): bool => !in_array($package, $packages))
+                    ->filter(static fn (string $version, $package): bool => ! in_array($package, $packages))
                     ->all()
             );
         }
@@ -141,10 +141,10 @@ class UpdatePackagistJob implements ShouldQueue
                 $this->user->notifyNow(
                     Notification::make()
                         ->success()
-                        ->title(__('nox::admin.notifications.' . $type . '.update.success.title', ['name' => $package]))
+                        ->title(__('nox::admin.notifications.'.$type.'.update.success.title', ['name' => $package]))
                         ->body(
                             __(
-                                'nox::admin.notifications.' . $type . '.update.success.body',
+                                'nox::admin.notifications.'.$type.'.update.success.body',
                                 [
                                     'old_version' => $currentVersions[$package],
                                     'new_version' => InstalledVersions::getVersion($package),
