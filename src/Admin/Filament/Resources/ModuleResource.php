@@ -60,6 +60,12 @@ class ModuleResource extends Resource
                     ->label(__('nox::admin.resources.module.table.columns.version'))
                     ->sortable()
                     ->searchable(),
+                Tables\Columns\Layout\Panel::make([
+                    Tables\Columns\ViewColumn::make('update')
+                        ->view('nox::components.filament.module.modal.module-update'),
+                ])->columnSpan(4)
+                    ->collapsible()
+                    ->hidden(static fn (Module $record): bool => $record->update === null),
             ])
             ->actions([
                 Tables\Actions\Action::make('update-module')
