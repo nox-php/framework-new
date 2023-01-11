@@ -108,8 +108,6 @@ class AdminServiceProvider extends PluginServiceProvider
     {
         parent::packageBooted();
 
-        $this->loadRoutesFrom(__DIR__.'/../../../routes/admin.php');
-
         Gate::policy(User::class, UserPolicy::class);
         Gate::policy(Role::class, RolePolicy::class);
         Gate::policy(Activity::class, ActivityPolicy::class);
