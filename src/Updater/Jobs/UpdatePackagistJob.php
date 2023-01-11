@@ -12,6 +12,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Cache;
 use Nox\Framework\Admin\Filament\Resources\ActivityResource;
 use Nox\Framework\Auth\Models\User;
 use Nox\Framework\NoxServiceProvider;
@@ -36,7 +37,9 @@ class UpdatePackagistJob implements ShouldQueue
     {
         $packageNames = Arr::flatten($this->packages);
         $currentVersions = collect($packageNames)
-            ->map(static fn(string $packageName): string => InstalledVersions::getVersion($packageName))
+            ->mapWithKeys(static fn(string $packageName): array => [
+                $packageName => InstalledVersions::getVersion($packageName)
+            ])
             ->all();
 
         $statusCode = $this->updatePackages($composer, $packageNames);
@@ -57,6 +60,8 @@ class UpdatePackagistJob implements ShouldQueue
 
         // Force reload composer cache to get newly installed versions
         InstalledVersions::reload(null);
+
+        $this->updateCaches();
 
         $this->sendSuccessNotification($currentVersions, $activityLog);
     }
@@ -85,6 +90,20 @@ class UpdatePackagistJob implements ShouldQueue
         }
     }
 
+    private function getNotificationActions(string $type, ?Activity $activityLog): array
+    {
+        return [
+            Action::make('view-log')
+                ->button()
+                ->label(__('nox::admin.notifications.' . $type . '.update.actions.view_log'))
+                ->color('secondary')
+                ->url(ActivityResource::getUrl('view', ['record' => $acuptivityLog?->id]), true)
+                ->hidden(static function () use ($activityLog) {
+                    return $activityLog === null;
+                }),
+        ];
+    }
+
     private function runUpdateScripts(): void
     {
         Artisan::call('vendor:publish', [
@@ -99,6 +118,20 @@ class UpdatePackagistJob implements ShouldQueue
         ]);
 
         Artisan::call('package:discover');
+    }
+
+    private function updateCaches(): void
+    {
+        foreach ($this->packages as $type => $packages) {
+            $cacheKey = 'nox.' . $type . '.updates';
+
+            Cache::forever(
+                $cacheKey,
+                collect(Cache::get($cacheKey, []))
+                    ->filter(static fn(string $package): bool => !in_array($package, $packages))
+                    ->all()
+            );
+        }
     }
 
     private function sendSuccessNotification(array $currentVersions, ?Activity $activityLog): void
@@ -123,19 +156,5 @@ class UpdatePackagistJob implements ShouldQueue
                 );
             }
         }
-    }
-
-    private function getNotificationActions(string $type, ?Activity $activityLog): array
-    {
-        return [
-            Action::make('view-log')
-                ->button()
-                ->label(__('nox::admin.notifications.' . $type . '.actions.view_log'))
-                ->color('secondary')
-                ->url(ActivityResource::getUrl('view', ['record' => $activityLog?->id]), true)
-                ->hidden(static function () use ($activityLog) {
-                    return $activityLog === null;
-                }),
-        ];
     }
 }
