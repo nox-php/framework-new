@@ -9,16 +9,36 @@ use Illuminate\Support\Collection;
 use Nox\Framework\Admin\Filament\Resources\ThemeResource;
 use Nox\Framework\Theme\Contracts\ThemeRepository;
 use Nox\Framework\Theme\Enums\ThemeStatus;
+use Nox\Framework\Theme\Facades\Themes;
 use Nox\Framework\Theme\Models\Theme;
+use Nox\Framework\Updater\Jobs\CheckPackagistUpdatesJob;
 
 class ListThemes extends ListRecords
 {
     protected static string $resource = ThemeResource::class;
 
+    public function checkThemeUpdates(): void
+    {
+        CheckPackagistUpdatesJob::dispatch([
+            'themes' => Themes::all()
+        ]);
+    }
+
+    public function bulkUpdateThemes(
+        ThemeRepository $themes,
+        Collection $records
+    )
+    {
+        foreach ($records as $record) {
+            $this->updateTheme($themes, $record);
+        }
+    }
+
     public function updateTheme(
         ThemeRepository $themes,
         Theme $record
-    ) {
+    )
+    {
         if (
             ($status = $themes->update($record->name)) &&
             $status === ThemeStatus::UpdatePending
@@ -37,19 +57,11 @@ class ListThemes extends ListRecords
         }
     }
 
-    public function bulkUpdateThemes(
-        ThemeRepository $themes,
-        Collection $records
-    ) {
-        foreach ($records as $record) {
-            $this->updateTheme($themes, $record);
-        }
-    }
-
     public function enableTheme(
         ThemeRepository $themes,
         Theme $record
-    ) {
+    )
+    {
         if (
             ($status = $themes->enable($record->name)) &&
             $status === ThemeStatus::EnableSuccess
@@ -71,7 +83,8 @@ class ListThemes extends ListRecords
     public function disableTheme(
         ThemeRepository $themes,
         Theme $record
-    ) {
+    )
+    {
         if (
             ($status = $themes->disable()) &&
             $status === ThemeStatus::DisableSuccess
@@ -90,10 +103,21 @@ class ListThemes extends ListRecords
         }
     }
 
+    public function bulkDeleteThemes(
+        ThemeRepository $themes,
+        Collection $records
+    )
+    {
+        foreach ($records as $record) {
+            $this->deleteTheme($themes, $record);
+        }
+    }
+
     public function deleteTheme(
         ThemeRepository $themes,
         Theme $record
-    ) {
+    )
+    {
         if (
             ($status = $themes->delete($record->name)) &&
             $status === ThemeStatus::DeletePending
@@ -112,18 +136,12 @@ class ListThemes extends ListRecords
         }
     }
 
-    public function bulkDeleteThemes(
-        ThemeRepository $themes,
-        Collection $records
-    ) {
-        foreach ($records as $record) {
-            $this->deleteTheme($themes, $record);
-        }
-    }
-
     protected function getActions(): array
     {
         return [
+            Action::make('check-theme-updates')
+                ->label(__('nox::admin.resources.theme.actions.check_updates'))
+                ->action('checkThemeUpdates'),
             Action::make('browse-themes')
                 ->label(__('nox::admin.resources.theme.actions.browse'))
                 ->url(ThemeResource::getUrl('browse')),

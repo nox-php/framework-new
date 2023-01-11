@@ -55,6 +55,7 @@ return [
             'actions' => [
                 'browse' => 'Browse themes',
                 'go_back' => 'Go back',
+                'check_updates' => 'Check for updates'
             ],
 
             'form' => [
@@ -383,6 +384,11 @@ return [
             ],
 
             'update' => [
+                'check' => [
+                    'title' => 'Checking for theme updates',
+                    'body' => 'You will be notified if there are any updates available'
+                ],
+
                 'pending' => [
                     'title' => ':name',
                     'body' => 'You will be notified once the theme has been updated',
