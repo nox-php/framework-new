@@ -8,9 +8,10 @@ use Nox\Framework\Module\Contracts\ModuleRepository as ModuleRepositoryContract;
 use Nox\Framework\Module\Discovery\ModuleDiscovery;
 use Nox\Framework\Module\Enums\ModuleStatus;
 use Nox\Framework\Module\Exceptions\ModuleNotFoundException;
-use Nox\Framework\Module\Jobs\DeleteThemeJob;
-use Nox\Framework\Module\Jobs\InstallThemeJob;
+use Nox\Framework\Module\Jobs\DeleteModuleJob;
+use Nox\Framework\Module\Jobs\InstallModuleJob;
 use Nox\Framework\Module\Module;
+use Nox\Framework\Updater\Jobs\UpdatePackagistJob;
 
 class ModuleRepository implements ModuleRepositoryContract
 {
@@ -107,7 +108,7 @@ class ModuleRepository implements ModuleRepositoryContract
             return ModuleStatus::AlreadyInstalled;
         }
 
-        InstallThemeJob::dispatch($name, auth()->user());
+        InstallModuleJob::dispatch($name, auth()->user());
 
         return ModuleStatus::InstallPending;
     }
@@ -119,6 +120,22 @@ class ModuleRepository implements ModuleRepositoryContract
         }
 
         return $this->find($module);
+    }
+
+    public function update(Module|string $module): ModuleStatus
+    {
+        if (! $module = $this->getModule($module)) {
+            return ModuleStatus::NotFound;
+        }
+
+        UpdatePackagistJob::dispatch(
+            [
+                'modules' => $module->name(),
+            ],
+            auth()->user()
+        );
+
+        return ModuleStatus::UpdatePending;
     }
 
     public function publish(string|Module $module, bool $migrate = true): ModuleStatus
@@ -179,7 +196,7 @@ class ModuleRepository implements ModuleRepositoryContract
             return ModuleStatus::NotFound;
         }
 
-        DeleteThemeJob::dispatch($module->name(), auth()->user());
+        DeleteModuleJob::dispatch($module->name(), auth()->user());
 
         return ModuleStatus::DeletePending;
     }

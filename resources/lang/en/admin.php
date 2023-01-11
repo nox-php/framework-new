@@ -16,6 +16,7 @@ return [
             'actions' => [
                 'browse' => 'Browse modules',
                 'go_back' => 'Go back',
+                'check_updates' => 'Check for updates',
             ],
 
             'form' => [
@@ -44,6 +45,13 @@ return [
                 'actions' => [
                     'install' => 'Install',
                     'view' => 'View',
+                    'update' => [
+                        'label' => 'Update',
+                    ],
+                ],
+
+                'bulk_actions' => [
+                    'update' => 'Update selected',
                 ],
             ],
         ],
@@ -286,6 +294,16 @@ return [
             ],
 
             'update' => [
+                'check' => [
+                    'title' => 'Checking for module updates',
+                    'body' => 'You will be notified if there are any updates available',
+                ],
+
+                'pending' => [
+                    'title' => ':name',
+                    'body' => 'You will be notified once the module has been updated',
+                ],
+
                 'success' => [
                     'title' => ':name',
                     'body' => 'Module has been updated from :old_version to :new_version',
@@ -443,38 +461,31 @@ return [
             ],
         ],
 
-        'nox' => [
-            'success' => [
-                'title' => 'Successfully updated Nox',
-                'body' => 'Nox has been updated from :old_version to :new_version',
+        'framework' => [
+            'update' => [
+                'check' => [
+                    'title' => ':name',
+                    'body' => 'You will be notified if there are any updates available',
+                ],
+
+                'pending' => [
+                    'title' => ':name',
+                    'body' => 'You will be notified once Nox has been updated',
+                ],
+
+                'success' => [
+                    'title' => ':name',
+                    'body' => 'Nox has been updated from :old_version to :new_version',
+                ],
+
+                'failed' => [
+                    'title' => ':name',
+                    'body' => 'Failed to update Nox',
+                ],
 
                 'actions' => [
                     'view_log' => 'View log',
                 ],
-            ],
-
-            'failed' => [
-                'title' => 'Failed to update Nox',
-                'body' => 'Nox :new_version has failed to install, reverting back to :old_version',
-
-                'actions' => [
-                    'retry' => 'Retry',
-                    'view_log' => 'View log',
-                ],
-            ],
-
-            'install' => [
-                'title' => 'A new version of Nox is available to install',
-                'body' => 'Nox :new_version is available, currently installed :old_version',
-
-                'actions' => [
-                    'install' => 'Install',
-                ],
-            ],
-
-            'updating' => [
-                'title' => 'Nox :version is updating in the background',
-                'body' => 'You will be notified once it has finished',
             ],
         ],
 
@@ -493,11 +504,6 @@ return [
                     'title' => 'Failed to update settings',
                     'body' => 'Failed to update config file',
                 ],
-            ],
-
-            'check_updates' => [
-                'title' => 'Checking for Nox updates in the background',
-                'body' => 'You will be notified if an update is available',
             ],
         ],
     ],

@@ -14,5 +14,7 @@ enum ModuleStatus: string
 
     case AlreadyInstalled = 'nox::admin.notifications.modules.already_installed';
 
+    case UpdatePending = 'nox::admin.notifications.modules.update.pending.body';
+
     case DeletePending = 'nox::admin.notifications.modules.delete.pending.body';
 }

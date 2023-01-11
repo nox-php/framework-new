@@ -206,30 +206,34 @@ class Settings extends Page implements HasCustomAbilities
             return;
         }
 
+        $package = 'nox-php/framework-new';
+
         UpdatePackagistJob::dispatch(
             [
-                'framework' => 'nox-php/framework-new'
+                'framework' => $package
             ],
             Filament::auth()->user()
         );
 
         Notification::make()
             ->success()
-            ->title(__('nox::admin.notifications.nox.updating.title', ['version' => $this->availableUpdateVersion]))
-            ->body(__('nox::admin.notifications.nox.updating.body'))
+            ->title(__('nox::admin.notifications.framework.update.pending.title', ['name' => $package]))
+            ->body(__('nox::admin.notifications.framework.update.pending.body'))
             ->send();
     }
 
     public function checkUpdate(): void
     {
+        $package = 'nox-php/framework-new';
+
         CheckPackagistUpdatesJob::dispatch([
-            'framework' => 'nox-php/framework-new'
+            'framework' => $package
         ]);
 
         Notification::make()
             ->success()
-            ->title(__('nox::admin.notifications.settings.check_updates.title'))
-            ->body(__('nox::admin.notifications.settings.check_updates.body'))
+            ->title(__('nox::admin.notifications.framework.update.check.title', ['name' => $package]))
+            ->body(__('nox::admin.notifications.framework.update.check.body'))
             ->send();
     }
 

@@ -62,13 +62,26 @@ class ModuleResource extends Resource
                     ->searchable(),
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
+                Tables\Actions\Action::make('update-module')
+                    ->label(__('nox::admin.resources.module.table.actions.update.label'))
+                    ->color('success')
+                    ->icon('heroicon-o-download')
+                    ->requiresConfirmation()
+                    ->action('updateModule')
+                    ->hidden(static fn (Module $record): bool => $record->update === null),
                 Tables\Actions\ActionGroup::make([
+                    Tables\Actions\ViewAction::make(),
                     Tables\Actions\DeleteAction::make()
                         ->action('deleteModule'),
                 ]),
             ])
             ->bulkActions([
+                Tables\Actions\BulkAction::make('update-modules')
+                    ->label(__('nox::admin.resources.module.table.bulk_actions.update'))
+                    ->icon('heroicon-o-download')
+                    ->color('success')
+                    ->requiresConfirmation()
+                    ->action('bulkUpdateModules'),
                 Tables\Actions\DeleteBulkAction::make()
                     ->action('bulkDeleteModules'),
             ]);

@@ -19,6 +19,8 @@ interface ModuleRepository
 
     public function publish(string|Module $module, bool $migrate = true): ModuleStatus;
 
+    public function update(string|Module $module): ModuleStatus;
+
     public function clear(): void;
 
     public function clearCache(): void;
