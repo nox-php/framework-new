@@ -19,8 +19,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Nox\Framework\Admin\Contracts\HasCustomAbilities;
 use Nox\Framework\Support\Env;
-use Nox\Framework\Updater\Jobs\NoxCheckUpdateJob;
-use Nox\Framework\Updater\Jobs\NoxUpdateJob;
+use Nox\Framework\Updater\Jobs\CheckPackagistUpdatesJob;
+use Nox\Framework\Updater\Jobs\UpdatePackagistJob;
 
 class Settings extends Page implements HasCustomAbilities
 {
@@ -207,7 +207,7 @@ class Settings extends Page implements HasCustomAbilities
 
     protected function getViewData(): array
     {
-        $this->availableUpdateVersion = Cache::get('nox.updater.available');
+        $this->availableUpdateVersion = Cache::get('nox.framework.updates');
 
         return parent::getViewData();
     }
@@ -218,7 +218,12 @@ class Settings extends Page implements HasCustomAbilities
             return;
         }
 
-        NoxUpdateJob::dispatch(Filament::auth()->user(), $this->availableUpdateVersion);
+        UpdatePackagistJob::dispatch(
+            [
+                'nox' => 'nox-php/framework'
+            ],
+            Filament::auth()->user()
+        );
 
         Notification::make()
             ->success()
@@ -229,7 +234,9 @@ class Settings extends Page implements HasCustomAbilities
 
     public function checkUpdate(): void
     {
-        NoxCheckUpdateJob::dispatch(Filament::auth()->user());
+        CheckPackagistUpdatesJob::dispatch([
+                'nox' => 'nox-php/framework'
+            ]);
 
         Notification::make()
             ->success()
@@ -442,7 +449,7 @@ class Settings extends Page implements HasCustomAbilities
 
     protected static function getNavigationBadge(): ?string
     {
-        return Cache::has('nox.updater.available')
+        return Cache::has('nox.framework.updates')
             ? '1'
             : null;
     }
