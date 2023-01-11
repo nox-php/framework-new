@@ -33,7 +33,7 @@ class ThemeResource extends Resource
                     ->label(__('nox::admin.resources.theme.form.inputs.name')),
                 Forms\Components\TextInput::make('version')
                     ->label(__('nox::admin.resources.theme.form.inputs.version'))
-                    ->formatStateUsing(static fn (string $state): string => 'v'.$state),
+                    ->formatStateUsing(static fn(string $state): string => 'v' . $state),
                 Forms\Components\TextInput::make('path')
                     ->label(__('nox::admin.resources.theme.form.inputs.path'))
                     ->columnSpanFull(),
@@ -75,40 +75,46 @@ class ThemeResource extends Resource
                     ->icon('heroicon-o-download')
                     ->requiresConfirmation()
                     ->action('updateTheme')
-                    ->hidden(static fn (Theme $record): bool => $record->update === null),
+                    ->hidden(static fn(Theme $record): bool => $record->update === null),
                 Tables\Actions\Action::make('enable-theme')
                     ->label(__('nox::admin.resources.theme.table.actions.enable'))
                     ->icon('heroicon-o-check')
                     ->requiresConfirmation()
                     ->action('enableTheme')
-                    ->hidden(static fn (Theme $record): bool => $record->enabled || $record->update !== null),
+                    ->hidden(static fn(Theme $record): bool => $record->enabled || $record->update !== null),
                 Tables\Actions\Action::make('disable-theme')
                     ->label(__('nox::admin.resources.theme.table.actions.disable'))
                     ->icon('heroicon-o-x')
                     ->color('danger')
                     ->requiresConfirmation()
                     ->action('disableTheme')
-                    ->hidden(static fn (Theme $record): bool => ! $record->enabled || $record->update !== null),
+                    ->hidden(static fn(Theme $record): bool => !$record->enabled || $record->update !== null),
                 Tables\Actions\ActionGroup::make([
                     Tables\Actions\Action::make('enable-theme-grouped')
                         ->label(__('nox::admin.resources.theme.table.actions.enable'))
                         ->icon('heroicon-o-check')
                         ->requiresConfirmation()
                         ->action('enableTheme')
-                        ->hidden(static fn (Theme $record): bool => $record->enabled || $record->update === null),
+                        ->hidden(static fn(Theme $record): bool => $record->enabled || $record->update === null),
                     Tables\Actions\Action::make('disable-theme-grouped')
                         ->label(__('nox::admin.resources.theme.table.actions.disable'))
                         ->icon('heroicon-o-x')
                         ->color('danger')
                         ->requiresConfirmation()
                         ->action('disableTheme')
-                        ->hidden(static fn (Theme $record): bool => ! $record->enabled || $record->update === null),
+                        ->hidden(static fn(Theme $record): bool => !$record->enabled || $record->update === null),
                     Tables\Actions\ViewAction::make(),
                     Tables\Actions\DeleteAction::make()
                         ->action('deleteTheme'),
                 ]),
             ])
             ->bulkActions([
+                Tables\Actions\BulkAction::make('update-themes')
+                    ->label(__('nox::admin.resources.theme.table.bulk_actions.update'))
+                    ->icon('heroicon-o-download')
+                    ->color('success')
+                    ->requiresConfirmation()
+                    ->action('bulkUpdateThemes'),
                 Tables\Actions\DeleteBulkAction::make()
                     ->action('bulkDeleteThemes'),
             ]);

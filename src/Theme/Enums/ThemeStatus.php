@@ -18,5 +18,7 @@ enum ThemeStatus: string
 
     case InstallPending = 'nox::admin.notifications.themes.install.pending.body';
 
+    case UpdatePending = 'nox::admin.notifications.themes.update.pending.body';
+
     case DeletePending = 'nox::admin.notifications.themes.delete.pending.body';
 }

@@ -11,6 +11,7 @@ use Nox\Framework\Theme\Exceptions\ThemeNotFoundException;
 use Nox\Framework\Theme\Jobs\DeleteThemeJob;
 use Nox\Framework\Theme\Jobs\InstallThemeJob;
 use Nox\Framework\Theme\Theme;
+use Nox\Framework\Updater\Jobs\UpdatePackagistJob;
 
 class ThemeRepository implements ThemeRepositoryContract
 {
@@ -20,13 +21,14 @@ class ThemeRepository implements ThemeRepositoryContract
 
     public function __construct(
         protected ThemeDiscovery $discovery
-    ) {
+    )
+    {
     }
 
     public function disabled(): array
     {
         return collect($this->all())
-            ->filter(static fn (Theme $theme): bool => ! $theme->enabled())
+            ->filter(static fn(Theme $theme): bool => !$theme->enabled())
             ->all();
     }
 
@@ -36,7 +38,7 @@ class ThemeRepository implements ThemeRepositoryContract
             return $this->themes;
         }
 
-        if (! $this->loadCache()) {
+        if (!$this->loadCache()) {
             $this->load();
         }
 
@@ -45,18 +47,18 @@ class ThemeRepository implements ThemeRepositoryContract
 
     protected function loadCache(): bool
     {
-        if (! $this->isCacheEnabled()) {
+        if (!$this->isCacheEnabled()) {
             return false;
         }
 
         $key = $this->getCacheKey();
 
-        if ((! $cache = Cache::get($key)) || ! is_array($cache)) {
+        if ((!$cache = Cache::get($key)) || !is_array($cache)) {
             return false;
         }
 
         $this->themes = collect($cache)
-            ->map(static fn ($theme): Theme => Theme::fromArray($theme))
+            ->map(static fn($theme): Theme => Theme::fromArray($theme))
             ->all();
 
         return true;
@@ -64,7 +66,7 @@ class ThemeRepository implements ThemeRepositoryContract
 
     protected function isCacheEnabled(): bool
     {
-        return (bool) config('nox.themes.cache.enabled');
+        return (bool)config('nox.themes.cache.enabled');
     }
 
     protected function getCacheKey(): string
@@ -75,7 +77,7 @@ class ThemeRepository implements ThemeRepositoryContract
     protected function load(): void
     {
         $this->themes = collect($this->discovery->discover())
-            ->map(static fn (array $manifest): Theme => Theme::fromArray($manifest))
+            ->map(static fn(array $manifest): Theme => Theme::fromArray($manifest))
             ->all();
 
         if ($enabledTheme = settings('monet.themes.enabled')) {
@@ -87,7 +89,7 @@ class ThemeRepository implements ThemeRepositoryContract
 
     public function enable(Theme|string $theme): ThemeStatus
     {
-        if (! $theme = $this->getTheme($theme)) {
+        if (!$theme = $this->getTheme($theme)) {
             return ThemeStatus::NotFound;
         }
 
@@ -122,7 +124,7 @@ class ThemeRepository implements ThemeRepositoryContract
 
     public function clearCache(): void
     {
-        if (! $this->isCacheEnabled()) {
+        if (!$this->isCacheEnabled()) {
             return;
         }
 
@@ -133,7 +135,7 @@ class ThemeRepository implements ThemeRepositoryContract
 
     protected function updateCache(): void
     {
-        if (! $this->isCacheEnabled()) {
+        if (!$this->isCacheEnabled()) {
             return;
         }
 
@@ -149,7 +151,7 @@ class ThemeRepository implements ThemeRepositoryContract
     public function enabled(): ?Theme
     {
         return $this->enabledTheme ?? ($this->enabledTheme = collect($this->all())
-            ->first(static fn (Theme $theme): bool => $theme->enabled()));
+            ->first(static fn(Theme $theme): bool => $theme->enabled()));
     }
 
     public function disable(): ThemeStatus
@@ -183,7 +185,7 @@ class ThemeRepository implements ThemeRepositoryContract
 
     public function delete(Theme|string $theme): ThemeStatus
     {
-        if (! $theme = $this->getTheme($theme)) {
+        if (!$theme = $this->getTheme($theme)) {
             return ThemeStatus::NotFound;
         }
 
@@ -194,20 +196,23 @@ class ThemeRepository implements ThemeRepositoryContract
 
     public function update(Theme|string $theme): ThemeStatus
     {
-        if (! $theme = $this->getTheme($theme)) {
+        if (!$theme = $this->getTheme($theme)) {
             return ThemeStatus::NotFound;
         }
 
-        UpdatePackagistJob::dispatch([
-            'themes' => $theme->name(),
-        ], auth()->user());
+        UpdatePackagistJob::dispatch(
+            [
+                'themes' => $theme->name(),
+            ],
+            auth()->user()
+        );
 
-        return ThemeStatus::DeletePending;
+        return ThemeStatus::UpdatePending;
     }
 
     public function publish(Theme|string $theme, bool $migrate = true): ThemeStatus
     {
-        if (! $theme = $this->getTheme($theme)) {
+        if (!$theme = $this->getTheme($theme)) {
             return ThemeStatus::NotFound;
         }
 
@@ -240,7 +245,7 @@ class ThemeRepository implements ThemeRepositoryContract
         ];
 
         foreach ($providers as $provider) {
-            if (! class_exists($provider)) {
+            if (!class_exists($provider)) {
                 continue;
             }
 
@@ -248,11 +253,11 @@ class ThemeRepository implements ThemeRepositoryContract
                 'app' => app(),
             ]);
 
-            if (! method_exists($provider, 'getInstallerTags')) {
+            if (!method_exists($provider, 'getInstallerTags')) {
                 continue;
             }
 
-            $tags = (array) (app()->call([$providerInstance, 'getInstallerTags']) ?? []);
+            $tags = (array)(app()->call([$providerInstance, 'getInstallerTags']) ?? []);
 
             foreach ($tags as $tag => $force) {
                 $tag = is_string($tag) ? $tag : $force;
@@ -269,7 +274,7 @@ class ThemeRepository implements ThemeRepositoryContract
 
     public function boot(): void
     {
-        if (! $theme = $this->enabled()) {
+        if (!$theme = $this->enabled()) {
             return;
         }
 

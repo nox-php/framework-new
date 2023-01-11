@@ -89,6 +89,10 @@ return [
                         'label' => 'Update',
                     ],
                 ],
+
+                'bulk_actions' => [
+                    'update' => 'Update selected'
+                ]
             ],
         ],
 
@@ -261,8 +265,8 @@ return [
 
             'install' => [
                 'pending' => [
-                    'title' => 'Pending installation: :name',
-                    'body' => 'You will be notified once it has been installed',
+                    'title' => ':name',
+                    'body' => 'You will be notified once the module has been installed',
                 ],
 
                 'success' => [
@@ -280,10 +284,26 @@ return [
                 ],
             ],
 
+            'update' => [
+                'success' => [
+                    'title' => ':name',
+                    'body' => 'Module has been updated from :old_version to :new_version',
+                ],
+
+                'failed' => [
+                    'title' => ':name',
+                    'body' => 'Failed to update module',
+                ],
+
+                'actions' => [
+                    'view_log' => 'View log',
+                ],
+            ],
+
             'delete' => [
                 'pending' => [
-                    'title' => 'Pending deletion: :name',
-                    'body' => 'You will be notified once it has been deleted',
+                    'title' => ':name',
+                    'body' => 'You will be notified once the module has been deleted',
                 ],
 
                 'success' => [
@@ -343,8 +363,8 @@ return [
 
             'install' => [
                 'pending' => [
-                    'title' => 'Pending installation: :name',
-                    'body' => 'You will be notified once it has been installed',
+                    'title' => ':name',
+                    'body' => 'You will be notified once the theme has been installed',
                 ],
 
                 'success' => [
@@ -363,6 +383,11 @@ return [
             ],
 
             'update' => [
+                'pending' => [
+                    'title' => ':name',
+                    'body' => 'You will be notified once the theme has been updated',
+                ],
+
                 'success' => [
                     'title' => ':name',
                     'body' => 'Theme has been updated from :old_version to :new_version',
@@ -371,10 +396,6 @@ return [
                 'failed' => [
                     'title' => ':name',
                     'body' => 'Failed to update theme',
-
-                    'actions' => [
-                        'view_log' => 'View log',
-                    ],
                 ],
 
                 'actions' => [
@@ -384,8 +405,8 @@ return [
 
             'delete' => [
                 'pending' => [
-                    'title' => 'Pending deletion: :name',
-                    'body' => 'You will be notified once it has been deleted',
+                    'title' => ':name',
+                    'body' => 'You will be notified once the theme has been deleted',
                 ],
 
                 'success' => [

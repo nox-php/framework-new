@@ -25,13 +25,13 @@ class ListThemes extends ListRecords
         ) {
             Notification::make()
                 ->success()
-                ->title(__('nox::admin.notifications.themes.pending.success.title', ['name' => $record->name]))
+                ->title(__('nox::admin.notifications.themes.update.pending.success.title', ['name' => $record->name]))
                 ->body(__($status->value))
                 ->send();
         } else {
             Notification::make()
                 ->danger()
-                ->title(__('nox::admin.notifications.themes.pending.failed.title', ['name' => $record->name]))
+                ->title(__('nox::admin.notifications.themes.update.pending.failed.title', ['name' => $record->name]))
                 ->body(__($status->value))
                 ->send();
         }
