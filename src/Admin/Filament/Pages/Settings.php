@@ -267,7 +267,8 @@ class Settings extends Page implements HasCustomAbilities
             Action::make('check-nox-update')
                 ->label(__('nox::admin.pages.settings.actions.check_for_updates'))
                 ->button()
-                ->action('checkUpdate'),
+                ->action('checkUpdate')
+                ->requiresConfirmation(),
         ];
     }
 
