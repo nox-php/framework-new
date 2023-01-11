@@ -222,8 +222,8 @@ class Settings extends Page implements HasCustomAbilities
 
         Notification::make()
             ->success()
-            ->title(__('nox::admin.notifications.nox_update.updating.title', ['version' => $this->availableUpdateVersion]))
-            ->body(__('nox::admin.notifications.nox_update.updating.body'))
+            ->title(__('nox::admin.notifications.nox.updating.title', ['version' => $this->availableUpdateVersion]))
+            ->body(__('nox::admin.notifications.nox.updating.body'))
             ->send();
     }
 

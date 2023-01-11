@@ -22,8 +22,8 @@ class NoxUpdaterController extends Controller
 
         Notification::make()
             ->success()
-            ->title(__('nox::admin.notifications.nox_update.updating.title', ['version' => $version]))
-            ->body(__('nox::admin.notifications.nox_update.updating.body'))
+            ->title(__('nox::admin.notifications.nox.updating.title', ['version' => $version]))
+            ->body(__('nox::admin.notifications.nox.updating.body'))
             ->send();
 
         return redirect()->back();

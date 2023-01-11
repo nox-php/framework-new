@@ -362,6 +362,26 @@ return [
                 ],
             ],
 
+            'update' => [
+                'success' => [
+                    'title' => ':name',
+                    'body' => 'Theme has been updated from :old_version to :new_version',
+                ],
+
+                'failed' => [
+                    'title' => ':name',
+                    'body' => 'Failed to update theme',
+
+                    'actions' => [
+                        'view_log' => 'View log',
+                    ],
+                ],
+
+                'actions' => [
+                    'view_log' => 'View log',
+                ],
+            ],
+
             'delete' => [
                 'pending' => [
                     'title' => 'Pending deletion: :name',
@@ -396,7 +416,7 @@ return [
             ],
         ],
 
-        'nox_update' => [
+        'nox' => [
             'success' => [
                 'title' => 'Successfully updated Nox',
                 'body' => 'Nox has been updated from :old_version to :new_version',

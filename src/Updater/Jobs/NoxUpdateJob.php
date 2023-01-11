@@ -64,7 +64,6 @@ class NoxUpdateJob implements ShouldQueue, ShouldBeUnique
 
         if ($status !== 0) {
             $this->handleError($log, $currentVersion);
-
             return;
         }
 
@@ -91,10 +90,10 @@ class NoxUpdateJob implements ShouldQueue, ShouldBeUnique
         $this->user->notifyNow(
             Notification::make()
                 ->success()
-                ->title(__('nox::admin.notifications.nox_update.success.title'))
+                ->title(__('nox::admin.notifications.nox.success.title'))
                 ->body(
                     __(
-                        'nox::admin.notifications.nox_update.success.body',
+                        'nox::admin.notifications.nox.success.body',
                         [
                             'old_version' => $currentVersion,
                             'new_version' => $this->version,
@@ -104,7 +103,7 @@ class NoxUpdateJob implements ShouldQueue, ShouldBeUnique
                 ->actions([
                     Action::make('view-log')
                         ->button()
-                        ->label(__('nox::admin.notifications.nox_update.success.actions.view_log'))
+                        ->label(__('nox::admin.notifications.nox.success.actions.view_log'))
                         ->color('secondary')
                         ->url(ActivityResource::getUrl('view', ['record' => $log?->id]), true)
                         ->hidden(static function () use ($log) {
@@ -120,10 +119,10 @@ class NoxUpdateJob implements ShouldQueue, ShouldBeUnique
         $this->user->notifyNow(
             Notification::make()
                 ->danger()
-                ->title(__('nox::admin.notifications.nox_update.failed.title'))
+                ->title(__('nox::admin.notifications.nox.failed.title'))
                 ->body(
                     __(
-                        'nox::admin.notifications.nox_update.failed.body',
+                        'nox::admin.notifications.nox.failed.body',
                         [
                             'new_version' => $this->version,
                             'old_version' => $currentVersion,
@@ -133,11 +132,11 @@ class NoxUpdateJob implements ShouldQueue, ShouldBeUnique
                 ->actions([
                     Action::make('update-nox-retry')
                         ->button()
-                        ->label(__('nox::admin.notifications.nox_update.failed.actions.retry'))
+                        ->label(__('nox::admin.notifications.nox.failed.actions.retry'))
                         ->url(URL::signedRoute('nox.updater', ['version' => $this->version])),
                     Action::make('view-log')
                         ->button()
-                        ->label(__('nox::admin.notifications.nox_update.failed.actions.view_log'))
+                        ->label(__('nox::admin.notifications.nox.failed.actions.view_log'))
                         ->color('secondary')
                         ->url(ActivityResource::getUrl('view', ['record' => $log?->id]), true)
                         ->hidden(static function () use ($log) {

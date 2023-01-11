@@ -57,10 +57,10 @@ class NoxCheckUpdateJob implements ShouldQueue
 
         $notification = Notification::make()
             ->warning()
-            ->title(__('nox::admin.notifications.nox_update.install.title'))
+            ->title(__('nox::admin.notifications.nox.install.title'))
             ->body(
                 __(
-                    'nox::admin.notifications.nox_update.install.body',
+                    'nox::admin.notifications.nox.install.body',
                     [
                         'new_version' => $version,
                         'old_version' => $installedVersion,
@@ -70,7 +70,7 @@ class NoxCheckUpdateJob implements ShouldQueue
             ->actions([
                 Action::make('update-nox')
                     ->button()
-                    ->label(__('nox::admin.notifications.nox_update.install.actions.install'))
+                    ->label(__('nox::admin.notifications.nox.install.actions.install'))
                     ->url(URL::signedRoute('nox.updater', ['version' => $version])),
             ]);
 
