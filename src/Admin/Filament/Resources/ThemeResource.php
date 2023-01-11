@@ -66,7 +66,8 @@ class ThemeResource extends Resource
                     Tables\Columns\ViewColumn::make('update')
                         ->view('nox::components.filament.theme.modal.theme-update'),
                 ])->columnSpan(4)
-                    ->collapsible(),
+                    ->collapsible()
+                    ->hidden(static fn(Theme $record): bool => $record->update === null),
             ])
             ->actions([
                 Tables\Actions\Action::make('update-theme')
