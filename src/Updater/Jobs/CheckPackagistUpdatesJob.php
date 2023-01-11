@@ -38,26 +38,38 @@ class CheckPackagistUpdatesJob implements ShouldQueue
         $manifests = Packagist::packages($packageNames);
 
         foreach ($this->packages as $type => $packages) {
-            $versions = [];
+            $versions = $this->getOutdatedPackages($packages, $manifests, $currentVersions);
 
-            foreach ($packages as $package) {
-                if (!$manifest = $manifests[$package] ?? null) {
-                    continue;
-                }
+            $this->updateCache($type, $versions);
+        }
+    }
 
-                if (version_compare($currentVersions[$package], $manifest['version_normalized'], '<')) {
-                    $versions[$package] = $manifest['version_normalized'];
-                }
+    private function getOutdatedPackages(array $packages, array $manifests, array $currentVersions): array
+    {
+        $versions = [];
+
+        foreach ($packages as $package) {
+            if (!$manifest = $manifests[$package] ?? null) {
+                continue;
             }
 
-            $cacheKey = 'nox.' . $type . 'updates';
-
-            Cache::forever(
-                $cacheKey,
-                collect(Cache::get($cacheKey, []))
-                    ->merge($versions)
-                    ->all()
-            );
+            if (version_compare($currentVersions[$package], $manifest['version_normalized'], '<')) {
+                $versions[$package] = $manifest['version_normalized'];
+            }
         }
+
+        return $versions;
+    }
+
+    private function updateCache(string $type, array $versions): void
+    {
+        $cacheKey = 'nox.' . $type . 'updates';
+
+        Cache::forever(
+            $cacheKey,
+            collect(Cache::get($cacheKey, []))
+                ->merge($versions)
+                ->all()
+        );
     }
 }

@@ -27,8 +27,8 @@ class ListThemes extends ListRecords
 
         Notification::make()
             ->success()
-            ->title(__('admin.notifications.themes.update.check.title'))
-            ->title(__('admin.notifications.themes.update.check.body'))
+            ->title(__('nox::admin.notifications.themes.update.check.title'))
+            ->title(__('nox::admin.notifications.themes.update.check.body'))
             ->send();
     }
 
