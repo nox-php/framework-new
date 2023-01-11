@@ -62,6 +62,11 @@ class ThemeResource extends Resource
                         ->sortable()
                         ->searchable(),
                 ]),
+                Tables\Columns\Layout\Panel::make([
+                    Tables\Columns\ViewColumn::make('update')
+                        ->view('nox::components.filament.theme.modal.theme-update'),
+                ])->columnSpan(4)
+                    ->collapsible(),
             ])
             ->actions([
                 Tables\Actions\Action::make('update-theme')
@@ -69,23 +74,35 @@ class ThemeResource extends Resource
                     ->color('success')
                     ->icon('heroicon-o-download')
                     ->requiresConfirmation()
-                    ->modalContent(view('nox::components.filament.theme.modal.theme-update'))
-                    ->action('updateTHeme')
-                    ->hidden(static fn (Theme $record): bool => $record->update !== null),
+                    ->action('updateTheme')
+                    ->hidden(static fn (Theme $record): bool => $record->update === null),
                 Tables\Actions\Action::make('enable-theme')
                     ->label(__('nox::admin.resources.theme.table.actions.enable'))
                     ->icon('heroicon-o-check')
                     ->requiresConfirmation()
                     ->action('enableTheme')
-                    ->hidden(static fn (Theme $record): bool => $record->enabled),
+                    ->hidden(static fn (Theme $record): bool => $record->enabled || $record->update !== null),
                 Tables\Actions\Action::make('disable-theme')
                     ->label(__('nox::admin.resources.theme.table.actions.disable'))
                     ->icon('heroicon-o-x')
                     ->color('danger')
                     ->requiresConfirmation()
                     ->action('disableTheme')
-                    ->hidden(static fn (Theme $record): bool => ! $record->enabled),
+                    ->hidden(static fn (Theme $record): bool => ! $record->enabled || $record->update !== null),
                 Tables\Actions\ActionGroup::make([
+                    Tables\Actions\Action::make('enable-theme-grouped')
+                        ->label(__('nox::admin.resources.theme.table.actions.enable'))
+                        ->icon('heroicon-o-check')
+                        ->requiresConfirmation()
+                        ->action('enableTheme')
+                        ->hidden(static fn (Theme $record): bool => $record->enabled || $record->update === null),
+                    Tables\Actions\Action::make('disable-theme-grouped')
+                        ->label(__('nox::admin.resources.theme.table.actions.disable'))
+                        ->icon('heroicon-o-x')
+                        ->color('danger')
+                        ->requiresConfirmation()
+                        ->action('disableTheme')
+                        ->hidden(static fn (Theme $record): bool => ! $record->enabled || $record->update === null),
                     Tables\Actions\ViewAction::make(),
                     Tables\Actions\DeleteAction::make()
                         ->action('deleteTheme'),

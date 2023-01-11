@@ -15,6 +15,37 @@ class ListThemes extends ListRecords
 {
     protected static string $resource = ThemeResource::class;
 
+    public function updateTheme(
+        ThemeRepository $themes,
+        Theme $record
+    ) {
+        if (
+            ($status = $themes->update($record->name)) &&
+            $status === ThemeStatus::UpdatePending
+        ) {
+            Notification::make()
+                ->success()
+                ->title(__('nox::admin.notifications.themes.pending.success.title', ['name' => $record->name]))
+                ->body(__($status->value))
+                ->send();
+        } else {
+            Notification::make()
+                ->danger()
+                ->title(__('nox::admin.notifications.themes.pending.failed.title', ['name' => $record->name]))
+                ->body(__($status->value))
+                ->send();
+        }
+    }
+
+    public function bulkUpdateThemes(
+        ThemeRepository $themes,
+        Collection $records
+    ) {
+        foreach ($records as $record) {
+            $this->updateTheme($themes, $record);
+        }
+    }
+
     public function enableTheme(
         ThemeRepository $themes,
         Theme $record
@@ -86,22 +117,7 @@ class ListThemes extends ListRecords
         Collection $records
     ) {
         foreach ($records as $record) {
-            if (
-                ($status = $themes->delete($record->name)) &&
-                $status === ThemeStatus::DeletePending
-            ) {
-                Notification::make()
-                    ->success()
-                    ->title(__('nox::admin.notifications.themes.delete.pending.title', ['name' => $record->name]))
-                    ->body(__($status->value))
-                    ->send();
-            } else {
-                Notification::make()
-                    ->danger()
-                    ->title(__('nox::admin.notifications.themes.delete.failed.title', ['name' => $record->name]))
-                    ->body(__($status->value))
-                    ->send();
-            }
+            $this->deleteTheme($themes, $record);
         }
     }
 

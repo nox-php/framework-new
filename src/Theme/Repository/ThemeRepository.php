@@ -192,6 +192,19 @@ class ThemeRepository implements ThemeRepositoryContract
         return ThemeStatus::DeletePending;
     }
 
+    public function update(Theme|string $theme): ThemeStatus
+    {
+        if (! $theme = $this->getTheme($theme)) {
+            return ThemeStatus::NotFound;
+        }
+
+        UpdatePackagistJob::dispatch([
+            'themes' => $theme->name(),
+        ], auth()->user());
+
+        return ThemeStatus::DeletePending;
+    }
+
     public function publish(Theme|string $theme, bool $migrate = true): ThemeStatus
     {
         if (! $theme = $this->getTheme($theme)) {

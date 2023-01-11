@@ -27,6 +27,8 @@ interface ThemeRepository
 
     public function publish(string|Theme $theme, bool $migrate = true): ThemeStatus;
 
+    public function update(string|Theme $theme): ThemeStatus;
+
     public function boot(): void;
 
     public function clear(): void;

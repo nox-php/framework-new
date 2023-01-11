@@ -3,6 +3,8 @@
 namespace Nox\Framework\Support;
 
 use Composer\Console\Application;
+use Composer\InstalledVersions;
+use Illuminate\Support\Facades\File;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 
@@ -15,10 +17,12 @@ class Composer
         putenv('COMPOSER_HOME='.__DIR__.'/vendor/bin/composer');
     }
 
-    public function require(string $package): int
+    public function require(string|array $packages): int
     {
+        $packages = is_array($packages) ? $packages : [$packages];
+
         return $this->run('require', [
-            'packages' => [$package],
+            'packages' => $packages,
         ]);
     }
 
@@ -39,20 +43,39 @@ class Composer
         return (new Application())->doRun($input, $this->output);
     }
 
-    public function update(string $package): int
+    public function update(string|array $packages): int
     {
+        $packages = is_array($packages) ? $packages : [$packages];
+
         return $this->run('update', [
-            'packages' => [$package],
+            'packages' => $packages,
             '-W' => true,
             '--no-dev' => true,
         ]);
     }
 
-    public function remove(string $package): int
+    public function remove(string|array $packages): int
     {
+        $packages = is_array($packages) ? $packages : [$packages];
+
         return $this->run('remove', [
-            'packages' => [$package],
+            'packages' => $packages,
         ]);
+    }
+
+    public function manifest(string $package): ?array
+    {
+        $path = InstalledVersions::getInstallPath($package).'/composer.json';
+
+        if (! File::exists($path)) {
+            return null;
+        }
+
+        return rescue(
+            static fn () => json_decode(File::get($path), true, 512, JSON_THROW_ON_ERROR),
+            null,
+            false
+        );
     }
 
     public function getOutput(): ?BufferedOutput
