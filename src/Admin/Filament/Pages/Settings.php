@@ -37,21 +37,11 @@ class Settings extends Page implements HasCustomAbilities
         return __('nox::admin.pages.settings.label');
     }
 
-    protected static function getNavigationGroup(): ?string
-    {
-        return __('nox::admin.groups.system');
-    }
-
-    protected function getTitle(): string
-    {
-        return __('nox::admin.pages.settings.label');
-    }
-
     public function mount(): void
     {
         abort_unless(static::shouldRegisterNavigation(), 401);
 
-        $databaseConfig = collect(config('database.connections.'.config('database.default'), []))
+        $databaseConfig = collect(config('database.connections.' . config('database.default'), []))
             ->only([
                 'driver',
                 'host',
@@ -59,12 +49,12 @@ class Settings extends Page implements HasCustomAbilities
                 'database',
                 'username',
             ])
-            ->mapWithKeys(static fn ($value, $key): array => [
-                'database_'.$key => $value,
+            ->mapWithKeys(static fn($value, $key): array => [
+                'database_' . $key => $value,
             ])
             ->all();
 
-        $mailConfig = collect(config('mail.mailers.'.config('mail.default'), []))
+        $mailConfig = collect(config('mail.mailers.' . config('mail.default'), []))
             ->only([
                 'transport',
                 'host',
@@ -74,8 +64,8 @@ class Settings extends Page implements HasCustomAbilities
                 'encryption',
                 'path',
             ])
-            ->mapWithKeys(static fn ($value, $key): array => [
-                'mail_'.$key => $value,
+            ->mapWithKeys(static fn($value, $key): array => [
+                'mail_' . $key => $value,
             ])
             ->all();
 
@@ -99,17 +89,22 @@ class Settings extends Page implements HasCustomAbilities
         $this->form->fill($state);
     }
 
+    protected static function shouldRegisterNavigation(): bool
+    {
+        return auth()->user()->can('view_settings');
+    }
+
     public function save(): void
     {
         $state = $this->form->getState();
 
         $databaseConfig = collect($state)
-            ->mapWithKeys(static fn ($value, $key): array => [
+            ->mapWithKeys(static fn($value, $key): array => [
                 Str::replace('database_', '', $key) => $value,
             ])
             ->all();
 
-        if (! $this->testDatabaseConnection($databaseConfig)) {
+        if (!$this->testDatabaseConnection($databaseConfig)) {
             Notification::make()
                 ->danger()
                 ->title(__('nox::admin.notifications.settings.failed.database.title'))
@@ -185,7 +180,7 @@ class Settings extends Page implements HasCustomAbilities
 
     protected function testDatabaseConnection(array $state): bool
     {
-        $config = config('database.connections.'.$state['driver'], []);
+        $config = config('database.connections.' . $state['driver'], []);
 
         $config = [
             ...$config,
@@ -205,13 +200,6 @@ class Settings extends Page implements HasCustomAbilities
         });
     }
 
-    protected function getViewData(): array
-    {
-        $this->availableUpdateVersion = Cache::get('nox.framework.updates');
-
-        return parent::getViewData();
-    }
-
     public function installUpdate(): void
     {
         if ($this->availableUpdateVersion === null) {
@@ -220,7 +208,7 @@ class Settings extends Page implements HasCustomAbilities
 
         UpdatePackagistJob::dispatch(
             [
-                'nox' => 'nox-php/framework-new'
+                'framework' => 'nox-php/framework-new'
             ],
             Filament::auth()->user()
         );
@@ -235,14 +223,38 @@ class Settings extends Page implements HasCustomAbilities
     public function checkUpdate(): void
     {
         CheckPackagistUpdatesJob::dispatch([
-                'nox' => 'nox-php/framework-new'
-            ]);
+            'framework' => 'nox-php/framework-new'
+        ]);
 
         Notification::make()
             ->success()
             ->title(__('nox::admin.notifications.settings.check_updates.title'))
             ->body(__('nox::admin.notifications.settings.check_updates.body'))
             ->send();
+    }
+
+    public static function getCustomAbilities(): array
+    {
+        return [
+            'view_settings',
+        ];
+    }
+
+    protected static function getNavigationGroup(): ?string
+    {
+        return __('nox::admin.groups.system');
+    }
+
+    protected function getTitle(): string
+    {
+        return __('nox::admin.pages.settings.label');
+    }
+
+    protected function getViewData(): array
+    {
+        $this->availableUpdateVersion = Cache::get('nox.framework.updates', [])['nox-php/framework-new'] ?? null;
+
+        return parent::getViewData();
     }
 
     protected function getActions(): array
@@ -307,31 +319,31 @@ class Settings extends Page implements HasCustomAbilities
                                         ]),
                                     TextInput::make('database_host')
                                         ->label(__('nox::admin.pages.settings.form.inputs.database_host'))
-                                        ->required(static fn (Closure $get): bool => $get('database_driver') !== 'sqlite')
-                                        ->hidden(static fn (Closure $get): bool => $get('database_driver') === 'sqlite'),
+                                        ->required(static fn(Closure $get): bool => $get('database_driver') !== 'sqlite')
+                                        ->hidden(static fn(Closure $get): bool => $get('database_driver') === 'sqlite'),
                                     TextInput::make('database_port')
                                         ->label(__('nox::admin.pages.settings.form.inputs.database_port'))
                                         ->integer()
                                         ->minValue(1)
-                                        ->required(static fn (Closure $get): bool => $get('database_driver') !== 'sqlite')
-                                        ->hidden(static fn (Closure $get): bool => $get('database_driver') === 'sqlite'),
+                                        ->required(static fn(Closure $get): bool => $get('database_driver') !== 'sqlite')
+                                        ->hidden(static fn(Closure $get): bool => $get('database_driver') === 'sqlite'),
                                     TextInput::make('database_database')
                                         ->label(__('nox::admin.pages.settings.form.inputs.database_database'))
                                         ->required(),
                                     TextInput::make('database_username')
                                         ->label(__('nox::admin.pages.settings.form.inputs.database_username'))
-                                        ->required(static fn (Closure $get): bool => $get('database_driver') !== 'sqlite')
-                                        ->hidden(static fn (Closure $get): bool => $get('database_driver') === 'sqlite'),
+                                        ->required(static fn(Closure $get): bool => $get('database_driver') !== 'sqlite')
+                                        ->hidden(static fn(Closure $get): bool => $get('database_driver') === 'sqlite'),
                                     Hidden::make('database_password_empty')
                                         ->default(false)
                                         ->reactive(),
                                     TextInput::make('database_password')
                                         ->label(__('nox::admin.pages.settings.form.inputs.database_password'))
                                         ->password()
-                                        ->dehydrated(fn (Closure $get, $state) => filled($state) || $get('database_password_empty'))
-                                        ->disabled(static fn (Closure $get) => $get('database_password_empty') === true)
-                                        ->required(static fn (Closure $get): bool => $get('database_driver') !== 'sqlite' && $get('database_password_empty') === false)
-                                        ->hidden(static fn (Closure $get): bool => $get('database_driver') === 'sqlite')
+                                        ->dehydrated(fn(Closure $get, $state) => filled($state) || $get('database_password_empty'))
+                                        ->disabled(static fn(Closure $get) => $get('database_password_empty') === true)
+                                        ->required(static fn(Closure $get): bool => $get('database_driver') !== 'sqlite' && $get('database_password_empty') === false)
+                                        ->hidden(static fn(Closure $get): bool => $get('database_driver') === 'sqlite')
                                         ->suffixAction(static function (Closure $get, Closure $set) {
                                             if ($get('database_password_empty') === true) {
                                                 return \Filament\Forms\Components\Actions\Action::make('empty-database-password')
@@ -358,9 +370,9 @@ class Settings extends Page implements HasCustomAbilities
                                         ->required(),
                                     TextInput::make('discord_client_secret')
                                         ->label(__('nox::admin.pages.settings.form.inputs.discord_client_secret'))
-                                        ->required(static fn (): bool => config('nox.auth.discord.client_secret') === null)
+                                        ->required(static fn(): bool => config('nox.auth.discord.client_secret') === null)
                                         ->password()
-                                        ->dehydrated(fn ($state) => filled($state)),
+                                        ->dehydrated(fn($state) => filled($state)),
                                 ]),
                         ]),
                     Tabs\Tab::make(__('nox::admin.pages.settings.form.tabs.mail'))
@@ -380,28 +392,28 @@ class Settings extends Page implements HasCustomAbilities
                                             TextInput::make('mail_path')
                                                 ->label(__('nox::admin.pages.settings.form.inputs.mail_path'))
                                                 ->default('/usr/sbin/sendmail -bs -i')
-                                                ->required(static fn (Closure $get): bool => $get('mail_transport') === 'sendmail')
-                                                ->hidden(static fn (Closure $get): bool => $get('mail_transport') !== 'sendmail'),
+                                                ->required(static fn(Closure $get): bool => $get('mail_transport') === 'sendmail')
+                                                ->hidden(static fn(Closure $get): bool => $get('mail_transport') !== 'sendmail'),
                                             TextInput::make('mail_host')
                                                 ->label(__('nox::admin.pages.settings.form.inputs.mail_host'))
-                                                ->hidden(static fn (Closure $get): bool => $get('mail_transport') === 'sendmail'),
+                                                ->hidden(static fn(Closure $get): bool => $get('mail_transport') === 'sendmail'),
                                             TextInput::make('mail_port')
                                                 ->label(__('nox::admin.pages.settings.form.inputs.mail_port'))
                                                 ->integer()
                                                 ->minValue(1)
-                                                ->hidden(static fn (Closure $get): bool => $get('mail_transport') === 'sendmail'),
+                                                ->hidden(static fn(Closure $get): bool => $get('mail_transport') === 'sendmail'),
                                             TextInput::make('mail_username')
                                                 ->label(__('nox::admin.pages.settings.form.inputs.mail_username'))
-                                                ->hidden(static fn (Closure $get): bool => $get('mail_transport') === 'sendmail'),
+                                                ->hidden(static fn(Closure $get): bool => $get('mail_transport') === 'sendmail'),
                                             Hidden::make('mail_password_empty')
                                                 ->default(false)
                                                 ->reactive(),
                                             TextInput::make('mail_password')
                                                 ->label(__('nox::admin.pages.settings.form.inputs.mail_password'))
                                                 ->password()
-                                                ->dehydrated(fn (Closure $get, $state) => filled($state) || $get('mail_password_empty'))
-                                                ->disabled(static fn (Closure $get) => $get('mail_password_empty') === true)
-                                                ->hidden(static fn (Closure $get): bool => $get('mail_transport') === 'sendmail')
+                                                ->dehydrated(fn(Closure $get, $state) => filled($state) || $get('mail_password_empty'))
+                                                ->disabled(static fn(Closure $get) => $get('mail_password_empty') === true)
+                                                ->hidden(static fn(Closure $get): bool => $get('mail_transport') === 'sendmail')
                                                 ->suffixAction(static function (Closure $get, Closure $set) {
                                                     if ($get('mail_password_empty') === true) {
                                                         return \Filament\Forms\Components\Actions\Action::make('empty-mail-password')
@@ -419,7 +431,7 @@ class Settings extends Page implements HasCustomAbilities
                                                 }),
                                             TextInput::make('mail_encryption')
                                                 ->label(__('nox::admin.pages.settings.form.inputs.mail_encryption'))
-                                                ->hidden(static fn (Closure $get): bool => $get('mail_transport') === 'sendmail')
+                                                ->hidden(static fn(Closure $get): bool => $get('mail_transport') === 'sendmail')
                                                 ->default('tls'),
                                         ]),
                                     Fieldset::make(__('nox::admin.pages.settings.form.fieldsets.signature'))
@@ -435,22 +447,8 @@ class Settings extends Page implements HasCustomAbilities
         ];
     }
 
-    protected static function shouldRegisterNavigation(): bool
-    {
-        return auth()->user()->can('view_settings');
-    }
-
-    public static function getCustomAbilities(): array
-    {
-        return [
-            'view_settings',
-        ];
-    }
-
     protected static function getNavigationBadge(): ?string
     {
-        return Cache::has('nox.framework.updates')
-            ? '1'
-            : null;
+        return (Cache::get('nox.framework.updates', [])['nox-php/framework-new'] ?? null) !== null;
     }
 }
