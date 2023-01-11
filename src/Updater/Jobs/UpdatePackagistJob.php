@@ -27,6 +27,9 @@ class UpdatePackagistJob implements ShouldQueue
         private User $user
     )
     {
+        $this->packages = collect($this->packages)
+            ->map(static fn(array|string $package): array => is_array($package) ? $package : [$package])
+            ->all();
     }
 
     public function handle(Composer $composer): void
