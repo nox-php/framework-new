@@ -76,7 +76,7 @@ class SeedNoxDefaults extends Command
             Role::class,
             Activity::class,
             Module::class,
-            Theme::class
+            Theme::class,
         ];
 
         foreach ($models as $model) {

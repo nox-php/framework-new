@@ -21,7 +21,7 @@ class EditRole extends EditRecord
     protected function getActions(): array
     {
         return [
-            DeleteAction::make()
+            DeleteAction::make(),
         ];
     }
 
@@ -42,8 +42,9 @@ class EditRole extends EditRecord
         }
 
         $this->abilities->each(function (string $ability): void {
-            if (!Str::contains($ability, '//')) {
+            if (! Str::contains($ability, '//')) {
                 BouncerFacade::allow($this->record)->to($ability);
+
                 return;
             }
 
@@ -54,8 +55,8 @@ class EditRole extends EditRecord
                 ->toString();
 
             rescue(
-                fn() => BouncerFacade::allow($this->record)->to($name, $resource::getModel()),
-                fn() => BouncerFacade::allow($this->record)->to($name),
+                fn () => BouncerFacade::allow($this->record)->to($name, $resource::getModel()),
+                fn () => BouncerFacade::allow($this->record)->to($name),
                 false
             );
         });

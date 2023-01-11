@@ -70,11 +70,11 @@ class UserPolicy
 
     private function canDelete(User $user, User $model): bool
     {
-        if($user->can('*')) {
+        if ($user->can('*')) {
             return true;
         }
 
-        if($model->can('*')) {
+        if ($model->can('*')) {
             return false;
         }
 

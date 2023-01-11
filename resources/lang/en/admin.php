@@ -85,6 +85,9 @@ return [
                     'disable' => 'Disable',
                     'install' => 'Install',
                     'view' => 'View',
+                    'update' => [
+                        'label' => 'Update',
+                    ],
                 ],
             ],
         ],

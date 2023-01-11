@@ -35,11 +35,11 @@ class UserResource extends Resource
     {
         $user = auth()->user();
 
-        if($record === null || $user->can('*')) {
+        if ($record === null || $user->can('*')) {
             return parent::can($action, $record);
         }
 
-        if($record->can('*')) {
+        if ($record->can('*')) {
             return false;
         }
 
@@ -48,7 +48,7 @@ class UserResource extends Resource
 
     public static function canDelete(Model $record): bool
     {
-        if(auth()->id() === $record->getAuthIdentifier()) {
+        if (auth()->id() === $record->getAuthIdentifier()) {
             return false;
         }
 
@@ -57,7 +57,7 @@ class UserResource extends Resource
 
     public static function canForceDelete(Model $record): bool
     {
-        if(auth()->id() === $record->getAuthIdentifier()) {
+        if (auth()->id() === $record->getAuthIdentifier()) {
             return false;
         }
 

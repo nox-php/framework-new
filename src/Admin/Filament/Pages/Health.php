@@ -118,7 +118,7 @@ class Health extends Page implements HasCustomAbilities
     public static function getCustomAbilities(): array
     {
         return [
-            'view_system_health'
+            'view_system_health',
         ];
     }
 

@@ -3,6 +3,7 @@
 namespace Nox\Framework\Theme\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use Nox\Framework\Theme\Facades\Themes;
 use Sushi\Sushi;
@@ -24,6 +25,7 @@ class Theme extends Model
             'version' => 'string',
             'pretty_version' => 'string',
             'enabled' => 'boolean',
+            'update' => 'string',
         ];
     }
 
@@ -45,6 +47,7 @@ class Theme extends Model
                 'pretty_version' => $theme->prettyVersion(),
                 'path' => $theme->path(),
                 'enabled' => $theme->enabled(),
+                'update' => Cache::get('nox.themes.updates', [])[$theme->name()] ?? null,
             ])
             ->values()
             ->all();

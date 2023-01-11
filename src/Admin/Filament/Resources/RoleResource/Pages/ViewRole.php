@@ -17,8 +17,8 @@ class ViewRole extends ViewRecord
         return [
             EditAction::make(),
             ActionGroup::make([
-                DeleteAction::make()
-            ])
+                DeleteAction::make(),
+            ]),
         ];
     }
 }

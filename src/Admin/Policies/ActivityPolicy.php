@@ -49,7 +49,7 @@ class ActivityPolicy
 
     public function delete(User $user, Activity $model): bool
     {
-        if($model->name === 'superadmin' || $model->name === 'user') {
+        if ($model->name === 'superadmin' || $model->name === 'user') {
             return false;
         }
 
@@ -63,7 +63,7 @@ class ActivityPolicy
 
     public function forceDelete(User $user, Activity $model): bool
     {
-        if($model->name === 'superadmin' || $model->name === 'user') {
+        if ($model->name === 'superadmin' || $model->name === 'user') {
             return false;
         }
 

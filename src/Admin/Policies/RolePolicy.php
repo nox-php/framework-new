@@ -49,7 +49,7 @@ class RolePolicy
 
     public function delete(User $user, Role $model): bool
     {
-        if($model->name === 'superadmin' || $model->name === 'user') {
+        if ($model->name === 'superadmin' || $model->name === 'user') {
             return false;
         }
 
@@ -63,7 +63,7 @@ class RolePolicy
 
     public function forceDelete(User $user, Role $model): bool
     {
-        if($model->name === 'superadmin' || $model->name === 'user') {
+        if ($model->name === 'superadmin' || $model->name === 'user') {
             return false;
         }
 

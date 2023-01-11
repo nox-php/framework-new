@@ -436,7 +436,7 @@ class Settings extends Page implements HasCustomAbilities
     public static function getCustomAbilities(): array
     {
         return [
-            'view_settings'
+            'view_settings',
         ];
     }
 

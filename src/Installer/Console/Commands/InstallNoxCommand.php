@@ -202,6 +202,7 @@ class InstallNoxCommand extends Command
     {
         if (! $this->install()) {
             $this->components->error('Failed to save .env file');
+
             return;
         }
 
@@ -220,7 +221,7 @@ class InstallNoxCommand extends Command
             ]);
         } else {
             $this->call('migrate', [
-                '--force' => true
+                '--force' => true,
             ]);
         }
 

@@ -47,21 +47,31 @@ class ThemeResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')
-                    ->label(__('nox::admin.resources.theme.table.columns.name'))
-                    ->sortable()
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('description')
-                    ->label(__('nox::admin.resources.theme.table.columns.description'))
-                    ->sortable()
-                    ->searchable()
-                    ->limit(),
-                Tables\Columns\BadgeColumn::make('version')
-                    ->label(__('nox::admin.resources.theme.table.columns.version'))
-                    ->sortable()
-                    ->searchable(),
+                Tables\Columns\Layout\Split::make([
+                    Tables\Columns\TextColumn::make('name')
+                        ->label(__('nox::admin.resources.theme.table.columns.name'))
+                        ->sortable()
+                        ->searchable(),
+                    Tables\Columns\TextColumn::make('description')
+                        ->label(__('nox::admin.resources.theme.table.columns.description'))
+                        ->sortable()
+                        ->searchable()
+                        ->limit(),
+                    Tables\Columns\BadgeColumn::make('version')
+                        ->label(__('nox::admin.resources.theme.table.columns.version'))
+                        ->sortable()
+                        ->searchable(),
+                ]),
             ])
             ->actions([
+                Tables\Actions\Action::make('update-theme')
+                    ->label(__('nox::admin.resources.theme.table.actions.update.label'))
+                    ->color('success')
+                    ->icon('heroicon-o-download')
+                    ->requiresConfirmation()
+                    ->modalContent(view('nox::components.filament.theme.modal.theme-update'))
+                    ->action('updateTHeme')
+                    ->hidden(static fn (Theme $record): bool => $record->update !== null),
                 Tables\Actions\Action::make('enable-theme')
                     ->label(__('nox::admin.resources.theme.table.actions.enable'))
                     ->icon('heroicon-o-check')

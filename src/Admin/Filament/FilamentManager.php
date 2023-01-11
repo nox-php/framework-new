@@ -80,7 +80,7 @@ class FilamentManager extends FilamentManagerBase
                             ->replace('\\', '//')
                             ->toString(),
                         'model' => $resource::getModel(),
-                        'abilities' => $abilities
+                        'abilities' => $abilities,
                     ],
                 ];
             })

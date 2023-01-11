@@ -32,8 +32,9 @@ class CreateRole extends CreateRecord
         }
 
         $this->abilities->each(function (string $ability): void {
-            if (!Str::contains($ability, '//')) {
+            if (! Str::contains($ability, '//')) {
                 BouncerFacade::allow($this->record)->to($ability);
+
                 return;
             }
 
@@ -44,8 +45,8 @@ class CreateRole extends CreateRecord
                 ->toString();
 
             rescue(
-                fn() => BouncerFacade::allow($this->record)->to($name, $resource::getModel()),
-                fn() => BouncerFacade::allow($this->record)->to($name),
+                fn () => BouncerFacade::allow($this->record)->to($name, $resource::getModel()),
+                fn () => BouncerFacade::allow($this->record)->to($name),
                 false
             );
         });
