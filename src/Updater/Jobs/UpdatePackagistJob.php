@@ -97,7 +97,7 @@ class UpdatePackagistJob implements ShouldQueue
                 ->button()
                 ->label(__('nox::admin.notifications.' . $type . '.update.actions.view_log'))
                 ->color('secondary')
-                ->url(ActivityResource::getUrl('view', ['record' => $acuptivityLog?->id]), true)
+                ->url(ActivityResource::getUrl('view', ['record' => $activityLog?->id]), true)
                 ->hidden(static function () use ($activityLog) {
                     return $activityLog === null;
                 }),
