@@ -51,7 +51,7 @@ class ThemeDiscovery
             ->put('pretty_version', InstalledVersions::getPrettyVersion($package))
             ->all();
 
-        $manifest['config'] = $manifest['extra'];
+        $manifest['config'] = $manifest['extra'] ?? [];
         unset($manifest['extra']);
 
         return $manifest;
