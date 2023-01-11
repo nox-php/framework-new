@@ -9,7 +9,6 @@ use Illuminate\Support\Collection;
 use Nox\Framework\Admin\Filament\Resources\ThemeResource;
 use Nox\Framework\Theme\Contracts\ThemeRepository;
 use Nox\Framework\Theme\Enums\ThemeStatus;
-use Nox\Framework\Theme\Facades\Themes;
 use Nox\Framework\Theme\Models\Theme;
 use Nox\Framework\Updater\Jobs\CheckPackagistUpdatesJob;
 
@@ -20,7 +19,10 @@ class ListThemes extends ListRecords
     public function checkThemeUpdates(ThemeRepository $themes): void
     {
         CheckPackagistUpdatesJob::dispatch([
-            'themes' => $themes->all()
+            'themes' => collect($themes->all())
+                ->map(static fn($theme) => $theme->name())
+                ->values()
+                ->all()
         ]);
 
         Notification::make()
