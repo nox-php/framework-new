@@ -42,8 +42,6 @@ class CheckPackagistUpdatesJob implements ShouldQueue
 
             $this->updateCache($type, $versions);
         }
-
-        $this->clearCache();
     }
 
     private function getOutdatedPackages(array $packages, array $manifests, array $currentVersions): array
@@ -73,16 +71,5 @@ class CheckPackagistUpdatesJob implements ShouldQueue
                 ->merge($versions)
                 ->all()
         );
-    }
-
-    private function clearCache(): void
-    {
-        if (! empty($this->packages['themes'])) {
-            Themes::clear();
-        }
-
-        if (! empty($this->packages['modules'])) {
-            Modules::clear();
-        }
     }
 }

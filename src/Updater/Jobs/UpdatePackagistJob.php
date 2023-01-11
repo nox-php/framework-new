@@ -15,8 +15,10 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
 use Nox\Framework\Admin\Filament\Resources\ActivityResource;
 use Nox\Framework\Auth\Models\User;
+use Nox\Framework\Module\Facades\Modules;
 use Nox\Framework\NoxServiceProvider;
 use Nox\Framework\Support\Composer;
+use Nox\Framework\Theme\Facades\Themes;
 use Spatie\Activitylog\Models\Activity;
 
 class UpdatePackagistJob implements ShouldQueue
@@ -62,6 +64,8 @@ class UpdatePackagistJob implements ShouldQueue
         InstalledVersions::reload(null);
 
         $this->updateCaches();
+
+        $this->clearCaches();
 
         $this->sendSuccessNotification($currentVersions, $activityLog);
     }
@@ -131,6 +135,17 @@ class UpdatePackagistJob implements ShouldQueue
                     ->filter(static fn (string $version, $package): bool => ! in_array($package, $packages))
                     ->all()
             );
+        }
+    }
+
+    private function clearCaches(): void
+    {
+        if (! empty($this->packages['themes'])) {
+            Themes::clear();
+        }
+
+        if (! empty($this->packages['modules'])) {
+            Modules::clear();
         }
     }
 
