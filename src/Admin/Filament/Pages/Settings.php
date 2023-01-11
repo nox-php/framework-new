@@ -220,7 +220,7 @@ class Settings extends Page implements HasCustomAbilities
 
         UpdatePackagistJob::dispatch(
             [
-                'nox' => 'nox-php/framework'
+                'nox' => 'nox-php/framework-new'
             ],
             Filament::auth()->user()
         );
@@ -235,7 +235,7 @@ class Settings extends Page implements HasCustomAbilities
     public function checkUpdate(): void
     {
         CheckPackagistUpdatesJob::dispatch([
-                'nox' => 'nox-php/framework'
+                'nox' => 'nox-php/framework-new'
             ]);
 
         Notification::make()
