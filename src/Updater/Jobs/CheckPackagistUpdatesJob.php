@@ -26,7 +26,7 @@ class CheckPackagistUpdatesJob implements ShouldQueue
             ->all();
     }
 
-    public function handle(Composer $composer): void
+    public function handle(): void
     {
         $packageNames = Arr::flatten($this->packages);
         $currentVersions = collect($packageNames)
@@ -63,7 +63,7 @@ class CheckPackagistUpdatesJob implements ShouldQueue
 
     private function updateCache(string $type, array $versions): void
     {
-        $cacheKey = 'nox.' . $type . 'updates';
+        $cacheKey = 'nox.' . $type . '.updates';
 
         Cache::forever(
             $cacheKey,
