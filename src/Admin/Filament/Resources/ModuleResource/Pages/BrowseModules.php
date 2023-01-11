@@ -16,6 +16,7 @@ use Nox\Framework\Admin\Filament\Resources\ModuleResource;
 use Nox\Framework\Admin\Models\PackagistPackage;
 use Nox\Framework\Module\Contracts\ModuleRepository;
 use Nox\Framework\Module\Enums\ModuleStatus;
+use Nox\Framework\Module\Facades\Modules;
 use Nox\Framework\Support\Packagist;
 
 class BrowseModules extends ListRecords
@@ -201,7 +202,8 @@ class BrowseModules extends ListRecords
                 ->button()
                 ->icon('heroicon-o-download')
                 ->action('installModule')
-                ->requiresConfirmation(),
+                ->requiresConfirmation()
+                ->hidden(static fn(PackagistPackage $record): bool => Modules::find($record->name) !== null),
             Tables\Actions\ActionGroup::make([
                 Tables\Actions\Action::make('view-module')
                     ->label(__('nox::admin.resources.module.table.actions.view'))
