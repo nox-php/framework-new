@@ -128,7 +128,7 @@ class UpdatePackagistJob implements ShouldQueue
             Cache::forever(
                 $cacheKey,
                 collect(Cache::get($cacheKey, []))
-                    ->filter(static fn(string $package): bool => !in_array($package, $packages))
+                    ->filter(static fn(string $version, $package): bool => !in_array($package, $packages))
                     ->all()
             );
         }
