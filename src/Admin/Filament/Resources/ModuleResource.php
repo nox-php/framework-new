@@ -47,19 +47,21 @@ class ModuleResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')
-                    ->label(__('nox::admin.resources.module.table.columns.name'))
-                    ->sortable()
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('description')
-                    ->label(__('nox::admin.resources.module.table.columns.description'))
-                    ->sortable()
-                    ->searchable()
-                    ->limit(),
-                Tables\Columns\BadgeColumn::make('version')
-                    ->label(__('nox::admin.resources.module.table.columns.version'))
-                    ->sortable()
-                    ->searchable(),
+                Tables\Columns\Layout\Split::make([
+                    Tables\Columns\TextColumn::make('name')
+                        ->label(__('nox::admin.resources.module.table.columns.name'))
+                        ->sortable()
+                        ->searchable(),
+                    Tables\Columns\TextColumn::make('description')
+                        ->label(__('nox::admin.resources.module.table.columns.description'))
+                        ->sortable()
+                        ->searchable()
+                        ->limit(),
+                    Tables\Columns\BadgeColumn::make('version')
+                        ->label(__('nox::admin.resources.module.table.columns.version'))
+                        ->sortable()
+                        ->searchable(),
+                ]),
                 Tables\Columns\Layout\Panel::make([
                     Tables\Columns\ViewColumn::make('update')
                         ->view('nox::components.filament.module.modal.module-update'),
