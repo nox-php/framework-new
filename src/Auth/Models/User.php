@@ -75,6 +75,11 @@ class User extends Authenticatable implements FilamentUser, HasName
         return 'updated_at';
     }
 
+    public function getConnectionName(): string
+    {
+        return config('database.default');
+    }
+
     public function getFillable(): array
     {
         return transformer(
